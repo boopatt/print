@@ -1,0 +1,360 @@
+<title>M1.8 Study Notes</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ink:#1c2530; --ink-soft:#57626d; --ink-faint:#7c8792;
+    --paper:#eef0ea; --card:#f8f9f4; --card-border:rgba(28,37,48,.12);
+    --row:#a9691f; --row-bg:rgba(169,105,31,.10);
+    --filter:#1f6f89; --filter-bg:rgba(31,111,137,.10);
+    --neutral:#4a5560; --neutral-bg:rgba(74,85,96,.08);
+    --warn:#9a3f3f; --warn-bg:rgba(154,63,63,.08);
+    --good:#4b7a4e; --good-bg:rgba(75,122,78,.10);
+    --code-bg:#1c2530; --code-ink:#e7e9e2; --code-accent:#e0b872;
+    --table-head:rgba(28,37,48,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#e7e9e2; --ink-soft:#aab2ab; --ink-faint:#828b85;
+      --paper:#14181a; --card:#1b2023; --card-border:rgba(231,233,226,.13);
+      --row:#dd9a4d; --row-bg:rgba(221,154,77,.13);
+      --filter:#5cb0cc; --filter-bg:rgba(92,176,204,.13);
+      --neutral:#a9b2ab; --neutral-bg:rgba(169,178,171,.10);
+      --warn:#e08a8a; --warn-bg:rgba(224,138,138,.12);
+      --good:#7fbb82; --good-bg:rgba(127,187,130,.12);
+      --code-bg:#0e1113; --code-ink:#e7e9e2; --code-accent:#e6b579;
+      --table-head:rgba(231,233,226,.06);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#e7e9e2; --ink-soft:#aab2ab; --ink-faint:#828b85;
+    --paper:#14181a; --card:#1b2023; --card-border:rgba(231,233,226,.13);
+    --row:#dd9a4d; --row-bg:rgba(221,154,77,.13);
+    --filter:#5cb0cc; --filter-bg:rgba(92,176,204,.13);
+    --neutral:#a9b2ab; --neutral-bg:rgba(169,178,171,.10);
+    --warn:#e08a8a; --warn-bg:rgba(224,138,138,.12);
+    --good:#7fbb82; --good-bg:rgba(127,187,130,.12);
+    --code-bg:#0e1113; --code-ink:#e7e9e2; --code-accent:#e6b579;
+    --table-head:rgba(231,233,226,.06);
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:16px; line-height:1.6; }
+  h1,h2,h3,h4{ font-family:"IBM Plex Serif",Georgia,serif; text-wrap:balance; margin:0; }
+  code,.mono{ font-family:"IBM Plex Mono","SFMono-Regular",monospace; }
+  a{ color:var(--filter); }
+
+  .shell{ display:grid; grid-template-columns:250px minmax(0,1fr); max-width:1140px; margin:0 auto; }
+  @media (max-width:880px){ .shell{ grid-template-columns:1fr; } .toc{ position:static !important; height:auto !important; } }
+
+  .toc{ position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto; padding:28px 14px 28px 22px; border-right:1px solid var(--card-border); scrollbar-width:thin; }
+  .toc-title{ font-family:"IBM Plex Mono"; font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:14px; }
+  .toc a{ display:block; text-decoration:none; font-size:13px; color:var(--ink-soft); padding:6px 10px; border-radius:6px; line-height:1.35; transition:background .15s,color .15s; }
+  .toc a:hover{ background:var(--card); color:var(--ink); }
+  .toc a.active{ background:var(--filter-bg); color:var(--filter); font-weight:500; }
+  .toc .toc-sources{ margin-top:18px; padding-top:14px; border-top:1px solid var(--card-border); font-size:11.5px; color:var(--ink-faint); line-height:1.6; }
+
+  main{ padding:44px 44px 100px; min-width:0; }
+  @media (max-width:640px){ main{ padding:28px 18px 70px; } }
+
+  .page-head{ margin-bottom:34px; padding-bottom:26px; border-bottom:1px solid var(--card-border); }
+  .eyebrow{ font-family:"IBM Plex Mono"; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:10px; }
+  .page-head h1{ font-size:clamp(26px,4vw,36px); font-weight:600; }
+  .page-head p{ color:var(--ink-soft); max-width:66ch; margin-top:10px; font-size:15px; }
+
+  section{ margin-bottom:44px; scroll-margin-top:18px; }
+  h2{ font-size:21px; font-weight:600; display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+  h2 .secnum{ font-family:"IBM Plex Mono"; font-size:13px; color:var(--ink-faint); font-weight:500; }
+  h3{ font-size:16px; font-weight:600; margin:22px 0 10px; }
+  h4{ font-size:14px; font-weight:600; margin:16px 0 8px; }
+  p{ margin:0 0 12px; }
+  ul,ol{ margin:0 0 14px; padding-left:22px; }
+  li{ margin-bottom:6px; }
+  strong{ color:var(--ink); }
+
+  .tag{ font-family:"IBM Plex Mono"; font-size:10px; letter-spacing:.04em; text-transform:uppercase; padding:3px 9px; border-radius:20px; white-space:nowrap; }
+  .tag-slides{ background:var(--neutral-bg); color:var(--neutral); }
+  .tag-video{ background:var(--filter-bg); color:var(--filter); }
+  .tag-demo{ background:var(--row-bg); color:var(--row); }
+  .tag-assignment{ background:var(--good-bg); color:var(--good); }
+
+  pre{ background:var(--code-bg); color:var(--code-ink); border-radius:8px; padding:14px 16px; overflow-x:auto; margin:10px 0 14px; font-size:13px; line-height:1.6; }
+  pre code{ font-family:"IBM Plex Mono"; }
+  .kw{ color:var(--code-accent); }
+  code.inline{ background:var(--card); border:1px solid var(--card-border); border-radius:4px; padding:1px 6px; font-size:0.9em; }
+
+  .dtable-wrap{ overflow-x:auto; margin:10px 0 16px; border-radius:8px; border:1px solid var(--card-border); }
+  table.dtable{ border-collapse:collapse; width:100%; font-size:13.5px; }
+  table.dtable th, table.dtable td{ padding:8px 14px; text-align:left; border-bottom:1px solid var(--card-border); vertical-align:top; }
+  table.dtable th{ background:var(--table-head); font-family:"IBM Plex Mono"; font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-soft); }
+  table.dtable td.num, table.dtable th.num{ text-align:right; font-variant-numeric:tabular-nums; font-family:"IBM Plex Mono"; }
+  table.dtable tr:last-child td{ border-bottom:none; }
+  table.dtable tr.hl td{ background:var(--good-bg); font-weight:600; }
+
+  .checklist{ list-style:none; padding-left:0; margin:10px 0 16px; display:flex; flex-direction:column; gap:8px; }
+  .checklist li{ display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:var(--ink-soft); margin-bottom:0; }
+  .checklist li::before{ content:"☐"; color:var(--warn); font-size:15px; line-height:1.5; flex-shrink:0; }
+
+  .callout{ border-left:3px solid var(--card-border); background:var(--card); border-radius:0 8px 8px 0; padding:14px 18px; margin:14px 0; }
+  .callout.exercise{ border-left-color:var(--row); background:var(--row-bg); }
+  .callout.exercise .elabel{ font-family:"IBM Plex Mono"; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--row); font-weight:600; display:block; margin-bottom:6px; }
+  .callout.rule{ border-left-color:var(--filter); background:var(--filter-bg); }
+  .callout.rule .elabel{ font-family:"IBM Plex Mono"; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--filter); font-weight:600; display:block; margin-bottom:6px; }
+  .callout.answer{ border-left-color:var(--good); background:var(--good-bg); }
+  .callout.answer .elabel{ font-family:"IBM Plex Mono"; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--good); font-weight:600; display:block; margin-bottom:6px; }
+  .callout p:last-child{ margin-bottom:0; }
+
+  .sources{ background:var(--card); border:1px solid var(--card-border); border-radius:10px; padding:16px 20px; font-size:13.5px; color:var(--ink-soft); margin-bottom:32px; }
+  .sources strong{ color:var(--ink); }
+  .sources ul{ margin:8px 0 0; padding-left:18px; }
+  .sources li{ margin-bottom:4px; }
+
+  .master{ display:flex; flex-direction:column; gap:20px; margin-bottom:8px; }
+  .master-group h4{ font-family:"IBM Plex Mono"; font-size:12.5px; color:var(--filter); margin:0 0 8px; text-transform:uppercase; letter-spacing:.04em; }
+  .chiprow{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{ font-family:"IBM Plex Mono"; font-size:12.5px; padding:5px 10px; border-radius:7px; background:var(--card); border:1px solid var(--card-border); }
+  .rules{ display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+  .rule-line{ display:flex; gap:10px; font-size:13.5px; }
+  .rule-line .n{ font-family:"IBM Plex Mono"; color:var(--ink-faint); min-width:16px; }
+  .rule-line p{ margin:0; color:var(--ink-soft); }
+
+  footer{ padding-top:24px; border-top:1px solid var(--card-border); color:var(--ink-faint); font-size:13px; }
+  ::selection{ background:var(--filter-bg); }
+</style>
+
+<div class="shell">
+  <nav class="toc" id="toc">
+    <div class="toc-title">M1.8 Contents</div>
+    <a href="#s1">1. Module page — review summary</a>
+    <a href="#s2">2. Master function reference</a>
+    <a href="#s3">3. Exercise 1.8.a — walkthrough</a>
+    <a href="#s4">4. Verified answer key</a>
+    <a href="#s5">5. Key takeaways</a>
+    <div class="toc-sources">
+      <span class="tag tag-slides">module page</span> &nbsp;
+      <span class="tag tag-demo">exercise</span> &nbsp;
+      <span class="tag tag-assignment">answer key</span>
+    </div>
+  </nav>
+
+  <main>
+    <header class="page-head">
+      <div class="eyebrow">ISA 512 · Module 1.8</div>
+      <h1>DAX and Exam Review</h1>
+      <p>No slides or new lecture in this module — it's the professor's own consolidated review page, the 1.8.a review exercise, and a screenshot of the verified solution numbers, combined into one reference.</p>
+    </header>
+
+    <div class="sources">
+      <strong>Sources combined in this note</strong>
+      <ul>
+        <li>Module review page (from Canvas): <code class="inline">summary.txt</code></li>
+        <li>Exercise file: <code class="inline">AdventureWorks.pbix</code></li>
+        <li>Solution screenshot: <code class="inline">exam 1 prep.png</code> — verified numeric answers to the 1.8.a exercise</li>
+      </ul>
+    </div>
+
+    <section id="s1">
+      <h2><span class="secnum">1</span> Module page — review summary <span class="tag tag-slides">module page</span></h2>
+      <p>This module has no slide deck of its own — its entire content <em>is</em> the review. The professor's framing, verbatim in spirit: <em>"You should aim to develop a good level of comfort in all these topics as you work with DAX before taking the first exam. The real measure of understanding of these topics is whether you can write DAX code to get the analysis you want with ease."</em></p>
+      <div class="callout rule">
+        <span class="elabel">General principles, called out explicitly</span>
+        <p>Format your code. Use variables to store scalar values or tables to simplify your code and make it readable. Do not create unnecessary measures or calculated columns. And a specific, testable rule about variables: <strong>a variable's use may be required</strong> in a nested row context (e.g., inside a calculated column) or when a context filter sits on a measure that itself uses a row context internally — outside of those cases, VAR is a readability choice, not a requirement.</p>
+      </div>
+    </section>
+
+    <section id="s2">
+      <h2><span class="secnum">2</span> Master function reference <span class="tag tag-slides">module page</span></h2>
+      <p>The professor's own consolidated list of everything Module 1 covers — treat this as the syllabus of what "comfortable with DAX" means for exam 1.</p>
+      <div class="master">
+        <div class="master-group">
+          <h4>Iterators</h4>
+          <div class="chiprow"><span class="chip">SUMX</span><span class="chip">AVERAGEX</span><span class="chip">MINX</span><span class="chip">MAXX</span></div>
+        </div>
+        <div class="master-group">
+          <h4>Table functions</h4>
+          <div class="chiprow"><span class="chip">FILTER</span><span class="chip">ALL</span><span class="chip">ALLSELECTED</span><span class="chip">DISTINCT</span><span class="chip">VALUES</span><span class="chip">RELATED</span><span class="chip">RELATEDTABLE</span></div>
+        </div>
+        <div class="master-group">
+          <h4>Evaluation contexts</h4>
+          <div class="rules">
+            <div class="rule-line"><span class="n">—</span><p><strong>Row context</strong>: exists in calculated columns, iterators, and FILTER. Allows direct reference to the columns of the table it's defined in, and to the one-side of a relationship via RELATED. Can nest (a calculated column's FILTER opens a second, inner row context).</p></div>
+            <div class="rule-line"><span class="n">—</span><p><strong>Filter context</strong>: defined by implicit filters (a matrix's row/column) and explicit filters (report filter, slicer). Relationship filters propagate according to cross-filter direction.</p></div>
+            <div class="rule-line"><span class="n">—</span><p><strong>Variable use</strong>: may be required in a nested row context, or when a context filter sits on a measure that uses a row context internally. In most other cases it's a readability choice, not a requirement.</p></div>
+          </div>
+        </div>
+        <div class="master-group">
+          <h4>CALCULATE — the rules, restated</h4>
+          <div class="rules">
+            <div class="rule-line"><span class="n">1</span><p>Computes its first argument, subject to any filter argument(s).</p></div>
+            <div class="rule-line"><span class="n">2</span><p>The first argument can't directly reference a column name; filter arguments can.</p></div>
+            <div class="rule-line"><span class="n">3</span><p>Can overwrite filters — use KEEPFILTERS where you need to intersect instead of replace.</p></div>
+            <div class="rule-line"><span class="n">4</span><p>Can use a table variable as a filter argument.</p></div>
+            <div class="rule-line"><span class="n">5</span><p>Does not accept aggregations directly in its filter arguments, and never needs FILTER wrapped around a simple boolean condition there.</p></div>
+            <div class="rule-line"><span class="n">6</span><p>Performs context transition. Can also modify filters via USERELATIONSHIP and CROSSFILTER.</p></div>
+          </div>
+        </div>
+        <div class="master-group">
+          <h4>Time intelligence</h4>
+          <p style="margin:0 0 8px;font-size:13.5px;color:var(--ink-soft);">Date table via CALENDARAUTO or CALENDAR (CALENDAR is the preferred/more controllable choice) → mark as date table → define sort-by columns for text fields → hide unnecessary columns from report view → set up relationships. Common calculations: year-to-date, quarter-to-date, month-to-date; same period last year/quarter/month; running total.</p>
+        </div>
+        <div class="master-group">
+          <h4>Table queries</h4>
+          <div class="rules">
+            <div class="rule-line"><span class="n">—</span><p><strong>FILTER</strong> — to apply boolean filters, or filters that involve an aggregation; has a row context.</p></div>
+            <div class="rule-line"><span class="n">—</span><p><strong>CALCULATETABLE</strong> — to evaluate a table expression or apply boolean filters; no row context of its own; applies context transition.</p></div>
+            <div class="rule-line"><span class="n">—</span><p><strong>ADDCOLUMNS</strong> — to add columns to a table; combine with SUMMARIZE to add an aggregation to a group of selected columns.</p></div>
+            <div class="rule-line"><span class="n">—</span><p><strong>GENERATE</strong> — returns the Cartesian product between each row of table1 and the table that results from evaluating table2 in the context of that row.</p></div>
+            <div class="rule-line"><span class="n">—</span><p><strong>TOPN</strong> — returns the top N rows of a table by some expression.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="s3">
+      <h2><span class="secnum">3</span> Exercise 1.8.a — walkthrough <span class="tag tag-demo">exercise</span></h2>
+      <p>File: <code class="inline">AdventureWorks.pbix</code>. First step: create a measures table and name it <code class="inline">_Measures</code> (the underscore prefix/suffix pattern keeps it sorted to the top of the table list — the same pattern introduced informally back in M1.2).</p>
+
+      <h3>3.1 Verify LineTotal and SubTotal, two ways each</h3>
+      <p>Is <code class="inline">OrderDetail[LineTotal]</code> really quantity × price? Is <code class="inline">OrderHeader[SubTotal]</code> really the sum of LineTotal? Build both comparisons on a multi-row card rather than assuming a stored column means what its name implies.</p>
+<pre><code>Revenue (LineTotal) = SUM ( OrderDetail[LineTotal] )
+
+Revenue (discounted unit price) =
+SUMX (
+    OrderDetail,
+    OrderDetail[Quantity] * OrderDetail[UnitPrice] * ( 1 - OrderDetail[Discount] )
+)
+
+Revenue (SubTotal) = SUM ( OrderHeader[SubTotal] )</code></pre>
+      <p>See §4 below — in this dataset, all three land on the exact same number, which is itself worth confirming rather than assuming.</p>
+
+      <h3>3.2 Average quantity sold per order — with and without RELATEDTABLE</h3>
+<pre><code><span class="kw">-- Without RELATEDTABLE: average directly over OrderHeader, pulling in a per-order total via CALCULATE</span>
+Avg Order Quantity (no RELATEDTABLE) =
+AVERAGEX (
+    OrderHeader,
+    CALCULATE ( SUM ( OrderDetail[Quantity] ) )
+)
+
+<span class="kw">-- With RELATEDTABLE: explicitly walk to each order's related line items</span>
+Avg Order Quantity (RELATEDTABLE) =
+AVERAGEX (
+    OrderHeader,
+    SUMX ( RELATEDTABLE ( OrderDetail ), OrderDetail[Quantity] )
+)</code></pre>
+      <div class="callout rule">
+        <span class="elabel">Why both work</span>
+        <p><code class="inline">CALCULATE(SUM(...))</code> inside an iterator performs context transition — the current OrderHeader row becomes a filter on OrderDetail, which is exactly what RELATEDTABLE does explicitly. They're two spellings of the same mechanism (this is the CALCULATE/RELATEDTABLE equivalence from M1.5).</p>
+      </div>
+
+      <h3>3.3 Total cost of goods sold</h3>
+<pre><code>COGS = SUMX ( OrderDetail, OrderDetail[Quantity] * RELATED ( Product[StandardCost] ) )</code></pre>
+
+      <h3>3.4 DAX query — top 3 products by margin %, per category</h3>
+      <p>Required output: five columns — category name, product name, revenue, cost of goods sold, margin. Use <strong>DISTINCT instead of VALUES</strong> to avoid blank rows from any unmatched foreign keys leaking into the result (the same DISTINCT/VALUES distinction from M1.3, applied here as a practical fix rather than a theory question).</p>
+<pre><code>EVALUATE
+GENERATE (
+    DISTINCT ( Product[Category] ),
+    TOPN (
+        3,
+        ADDCOLUMNS (
+            DISTINCT ( Product[Product Name] ),
+            "Revenue", CALCULATE ( SUMX ( OrderDetail, OrderDetail[Quantity] * OrderDetail[UnitPrice] * ( 1 - OrderDetail[Discount] ) ) ),
+            "COGS",    CALCULATE ( SUMX ( OrderDetail, OrderDetail[Quantity] * RELATED ( Product[StandardCost] ) ) ),
+            "Margin",  DIVIDE ( [Revenue] - [COGS], [Revenue] )
+        ),
+        [Margin]
+    )
+)</code></pre>
+
+      <h3>3.5 Effective discount rate, then "highly discounted" sales two ways</h3>
+<pre><code>Effective Discount Rate =
+VAR ActualRevenue      = SUMX ( OrderDetail, OrderDetail[Quantity] * OrderDetail[UnitPrice] * ( 1 - OrderDetail[Discount] ) )
+VAR UndiscountedRevenue = SUMX ( OrderDetail, OrderDetail[Quantity] * OrderDetail[UnitPrice] )
+RETURN
+    DIVIDE ( UndiscountedRevenue - ActualRevenue, UndiscountedRevenue )</code></pre>
+      <div class="callout exercise">
+        <span class="elabel">Exercise, as given</span>
+        <p>A product is "highly discounted" if its <strong>effective discount rate across all its sales</strong> exceeds 30%. First build the total sales for highly discounted products <em>using</em> the Effective Discount Rate measure; then build it a second time <em>without</em> using that measure — doing everything inline in one measure. Hint given directly in the exercise: <strong>make sure context transition is taking place whenever an aggregation runs row-by-row.</strong> Finally: how would the measure change if you wanted highly discounted <em>line items</em> instead of highly discounted <em>products</em>?</p>
+      </div>
+<pre><code><span class="kw">-- Via the helper measure</span>
+Highly Discounted Product Sales =
+SUMX (
+    FILTER (
+        VALUES ( Product[Product Name] ),
+        CALCULATE ( [Effective Discount Rate] ) &gt; 0.30
+    ),
+    CALCULATE ( SUMX ( OrderDetail, OrderDetail[Quantity] * OrderDetail[UnitPrice] * ( 1 - OrderDetail[Discount] ) ) )
+)
+
+<span class="kw">-- Self-contained, one measure, no helper</span>
+Highly Discounted Product Sales 2 =
+SUMX (
+    FILTER (
+        VALUES ( Product[Product Name] ),
+        VAR ActualRevenue =
+            CALCULATE ( SUMX ( OrderDetail, OrderDetail[Quantity] * OrderDetail[UnitPrice] * ( 1 - OrderDetail[Discount] ) ) )
+        VAR UndiscountedRevenue =
+            CALCULATE ( SUMX ( OrderDetail, OrderDetail[Quantity] * OrderDetail[UnitPrice] ) )
+        RETURN
+            DIVIDE ( UndiscountedRevenue - ActualRevenue, UndiscountedRevenue ) &gt; 0.30
+    ),
+    CALCULATE ( SUMX ( OrderDetail, OrderDetail[Quantity] * OrderDetail[UnitPrice] * ( 1 - OrderDetail[Discount] ) ) )
+)</code></pre>
+      <p>Both versions need an explicit <code class="inline">CALCULATE</code> around every aggregation inside the outer <code class="inline">FILTER</code>'s row context (iterating over <code class="inline">VALUES(Product[Product Name])</code>) — that's context transition turning "the current product" into an actual filter before <code class="inline">SUMX</code> can run against <code class="inline">OrderDetail</code>. Drop any one of those <code class="inline">CALCULATE</code>s and every product silently gets evaluated against the grand-total discount rate instead of its own. <strong>For line items instead of products</strong>: drop the outer FILTER-over-VALUES entirely and just filter OrderDetail rows directly by a per-line-item discount rate — no context transition is needed at all once you're filtering at the same grain you're aggregating.</p>
+    </section>
+
+    <section id="s4">
+      <h2><span class="secnum">4</span> Verified answer key <span class="tag tag-assignment">answer key</span></h2>
+      <p>From <code class="inline">exam 1 prep.png</code> — the professor's own multi-row-card screenshot of correct results. Use this to check your own file, the way M1.1's benchmark numbers were used to check the relationships assignment.</p>
+      <div class="dtable-wrap">
+        <table class="dtable">
+          <tr><th>Measure</th><th class="num">Verified value</th></tr>
+          <tr><td>Revenue (LineTotal)</td><td class="num">$109,846,381</td></tr>
+          <tr><td>Revenue (discounted unit price)</td><td class="num">$109,846,381</td></tr>
+          <tr><td>Revenue (SubTotal)</td><td class="num">$109,846,381</td></tr>
+          <tr><td>Avg order quantity (all approaches tested)</td><td class="num">8.74</td></tr>
+          <tr class="hl"><td>Effective discount rate</td><td class="num">35.75%</td></tr>
+          <tr><td>LineTotal (actual revenue)</td><td class="num">$109,846,381</td></tr>
+          <tr><td>Undiscounted revenue</td><td class="num">$170,964,700</td></tr>
+          <tr><td>Highly discounted product sales (via helper measure)</td><td class="num">$96,670,410</td></tr>
+          <tr><td>Highly discounted product sales 2 (self-contained)</td><td class="num">$96,670,410</td></tr>
+        </table>
+      </div>
+      <div class="callout answer">
+        <span class="elabel">What this confirms</span>
+        <p>All three revenue formulations agree exactly — in this dataset, LineTotal, the recomputed discounted-price calculation, and OrderHeader's SubTotal are all internally consistent, so the "verify, don't assume" exercise pays off by confirming the stored columns are trustworthy here (that won't always be true in other datasets — check anyway). The average-order-quantity measures agree regardless of RELATEDTABLE vs. context-transition phrasing, exactly as the mechanism predicts. And critically: <strong>both "highly discounted" measures land on the identical $96,670,410</strong> — if your two versions disagree, one of them is missing a context-transition CALCULATE somewhere in the row-by-row aggregation.</p>
+        <p>Sanity check the discount rate arithmetic yourself: 1 − (109,846,381 / 170,964,700) = 35.75% ✓.</p>
+      </div>
+    </section>
+
+    <section id="s5">
+      <h2><span class="secnum">5</span> Key takeaways / self-check</h2>
+      <ul>
+        <li>Work the exercise cold, under a timer, before checking §4 — that's the actual point of this module.</li>
+        <li>If your revenue numbers don't all match, don't assume the DAX is wrong before checking the data: revisit whether Discount is stored as a fraction (0.15) vs. a whole percent (15) — a unit mismatch here is a classic silent bug.</li>
+        <li>If your two "highly discounted" measures disagree, the fix is almost always a missing <code class="inline">CALCULATE</code> around one of the row-by-row aggregations inside the outer FILTER — restate, from memory, why that CALCULATE is required there (context transition, M1.5).</li>
+        <li>If your DAX query returns extra blank rows, switch <code class="inline">VALUES</code> to <code class="inline">DISTINCT</code> on the offending column before debugging anything else (M1.3).</li>
+        <li>Across all of Module 1: can you now write DAX to answer a new business question directly, instead of pattern-matching to the closest example you've seen? That's the bar this review page sets.</li>
+      </ul>
+    </section>
+
+    <footer>Built from the M1.8 review page and the verified solution screenshot — work the exercise yourself first, then use §4 to check your own numbers.</footer>
+  </main>
+</div>
+
+<script>
+  (function(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+    var sections = links.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+    if(!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var idx = sections.indexOf(entry.target);
+        if(idx === -1) return;
+        if(entry.isIntersecting){
+          links.forEach(function(l){ l.classList.remove('active'); });
+          links[idx].classList.add('active');
+        }
+      });
+    }, { rootMargin: '-10% 0px -75% 0px', threshold: 0 });
+    sections.forEach(function(s){ io.observe(s); });
+  })();
+</script>

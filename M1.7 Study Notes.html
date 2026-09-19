@@ -1,0 +1,446 @@
+<title>M1.7 Study Notes</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ink:#1c2530; --ink-soft:#57626d; --ink-faint:#7c8792;
+    --paper:#eef0ea; --card:#f8f9f4; --card-border:rgba(28,37,48,.12);
+    --row:#a9691f; --row-bg:rgba(169,105,31,.10);
+    --filter:#1f6f89; --filter-bg:rgba(31,111,137,.10);
+    --neutral:#4a5560; --neutral-bg:rgba(74,85,96,.08);
+    --warn:#9a3f3f; --warn-bg:rgba(154,63,63,.08);
+    --good:#4b7a4e; --good-bg:rgba(75,122,78,.10);
+    --code-bg:#1c2530; --code-ink:#e7e9e2; --code-accent:#e0b872;
+    --table-head:rgba(28,37,48,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#e7e9e2; --ink-soft:#aab2ab; --ink-faint:#828b85;
+      --paper:#14181a; --card:#1b2023; --card-border:rgba(231,233,226,.13);
+      --row:#dd9a4d; --row-bg:rgba(221,154,77,.13);
+      --filter:#5cb0cc; --filter-bg:rgba(92,176,204,.13);
+      --neutral:#a9b2ab; --neutral-bg:rgba(169,178,171,.10);
+      --warn:#e08a8a; --warn-bg:rgba(224,138,138,.12);
+      --good:#7fbb82; --good-bg:rgba(127,187,130,.12);
+      --code-bg:#0e1113; --code-ink:#e7e9e2; --code-accent:#e6b579;
+      --table-head:rgba(231,233,226,.06);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#e7e9e2; --ink-soft:#aab2ab; --ink-faint:#828b85;
+    --paper:#14181a; --card:#1b2023; --card-border:rgba(231,233,226,.13);
+    --row:#dd9a4d; --row-bg:rgba(221,154,77,.13);
+    --filter:#5cb0cc; --filter-bg:rgba(92,176,204,.13);
+    --neutral:#a9b2ab; --neutral-bg:rgba(169,178,171,.10);
+    --warn:#e08a8a; --warn-bg:rgba(224,138,138,.12);
+    --good:#7fbb82; --good-bg:rgba(127,187,130,.12);
+    --code-bg:#0e1113; --code-ink:#e7e9e2; --code-accent:#e6b579;
+    --table-head:rgba(231,233,226,.06);
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:16px; line-height:1.6; }
+  h1,h2,h3,h4{ font-family:"IBM Plex Serif",Georgia,serif; text-wrap:balance; margin:0; }
+  code,.mono{ font-family:"IBM Plex Mono","SFMono-Regular",monospace; }
+  a{ color:var(--filter); }
+
+  .shell{ display:grid; grid-template-columns:250px minmax(0,1fr); max-width:1140px; margin:0 auto; }
+  @media (max-width:880px){ .shell{ grid-template-columns:1fr; } .toc{ position:static !important; height:auto !important; } }
+
+  .toc{ position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto; padding:28px 14px 28px 22px; border-right:1px solid var(--card-border); scrollbar-width:thin; }
+  .toc-title{ font-family:"IBM Plex Mono"; font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:14px; }
+  .toc a{ display:block; text-decoration:none; font-size:13px; color:var(--ink-soft); padding:6px 10px; border-radius:6px; line-height:1.35; transition:background .15s,color .15s; }
+  .toc a:hover{ background:var(--card); color:var(--ink); }
+  .toc a.active{ background:var(--filter-bg); color:var(--filter); font-weight:500; }
+  .toc .toc-sources{ margin-top:18px; padding-top:14px; border-top:1px solid var(--card-border); font-size:11.5px; color:var(--ink-faint); line-height:1.6; }
+
+  main{ padding:44px 44px 100px; min-width:0; }
+  @media (max-width:640px){ main{ padding:28px 18px 70px; } }
+
+  .page-head{ margin-bottom:34px; padding-bottom:26px; border-bottom:1px solid var(--card-border); }
+  .eyebrow{ font-family:"IBM Plex Mono"; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:10px; }
+  .page-head h1{ font-size:clamp(26px,4vw,36px); font-weight:600; }
+  .page-head p{ color:var(--ink-soft); max-width:66ch; margin-top:10px; font-size:15px; }
+
+  section{ margin-bottom:44px; scroll-margin-top:18px; }
+  h2{ font-size:21px; font-weight:600; display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+  h2 .secnum{ font-family:"IBM Plex Mono"; font-size:13px; color:var(--ink-faint); font-weight:500; }
+  h3{ font-size:16px; font-weight:600; margin:22px 0 10px; }
+  h4{ font-size:14px; font-weight:600; margin:16px 0 8px; }
+  p{ margin:0 0 12px; }
+  ul,ol{ margin:0 0 14px; padding-left:22px; }
+  li{ margin-bottom:6px; }
+  strong{ color:var(--ink); }
+
+  .tag{ font-family:"IBM Plex Mono"; font-size:10px; letter-spacing:.04em; text-transform:uppercase; padding:3px 9px; border-radius:20px; white-space:nowrap; }
+  .tag-slides{ background:var(--neutral-bg); color:var(--neutral); }
+  .tag-video{ background:var(--filter-bg); color:var(--filter); }
+  .tag-demo{ background:var(--row-bg); color:var(--row); }
+  .tag-assignment{ background:var(--good-bg); color:var(--good); }
+
+  pre{ background:var(--code-bg); color:var(--code-ink); border-radius:8px; padding:14px 16px; overflow-x:auto; margin:10px 0 14px; font-size:13px; line-height:1.6; }
+  pre code{ font-family:"IBM Plex Mono"; }
+  .kw{ color:var(--code-accent); }
+  code.inline{ background:var(--card); border:1px solid var(--card-border); border-radius:4px; padding:1px 6px; font-size:0.9em; }
+
+  .dtable-wrap{ overflow-x:auto; margin:10px 0 16px; border-radius:8px; border:1px solid var(--card-border); }
+  table.dtable{ border-collapse:collapse; width:100%; font-size:13.5px; }
+  table.dtable th, table.dtable td{ padding:8px 14px; text-align:left; border-bottom:1px solid var(--card-border); vertical-align:top; }
+  table.dtable th{ background:var(--table-head); font-family:"IBM Plex Mono"; font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-soft); }
+  table.dtable tr:last-child td{ border-bottom:none; }
+
+  .checklist{ list-style:none; padding-left:0; margin:10px 0 16px; display:flex; flex-direction:column; gap:8px; }
+  .checklist li{ display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:var(--ink-soft); margin-bottom:0; }
+  .checklist li::before{ content:"☐"; color:var(--warn); font-size:15px; line-height:1.5; flex-shrink:0; }
+
+  .callout{ border-left:3px solid var(--card-border); background:var(--card); border-radius:0 8px 8px 0; padding:14px 18px; margin:14px 0; }
+  .callout.exercise{ border-left-color:var(--row); background:var(--row-bg); }
+  .callout.exercise .elabel{ font-family:"IBM Plex Mono"; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--row); font-weight:600; display:block; margin-bottom:6px; }
+  .callout.rule{ border-left-color:var(--filter); background:var(--filter-bg); }
+  .callout.rule .elabel{ font-family:"IBM Plex Mono"; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--filter); font-weight:600; display:block; margin-bottom:6px; }
+  .callout p:last-child{ margin-bottom:0; }
+
+  .sources{ background:var(--card); border:1px solid var(--card-border); border-radius:10px; padding:16px 20px; font-size:13.5px; color:var(--ink-soft); margin-bottom:32px; }
+  .sources strong{ color:var(--ink); }
+  .sources ul{ margin:8px 0 0; padding-left:18px; }
+  .sources li{ margin-bottom:4px; }
+
+  footer{ padding-top:24px; border-top:1px solid var(--card-border); color:var(--ink-faint); font-size:13px; }
+  ::selection{ background:var(--filter-bg); }
+</style>
+
+<div class="shell">
+  <nav class="toc" id="toc">
+    <div class="toc-title">M1.7 Contents</div>
+    <a href="#s1">1. Slides — Table Queries</a>
+    <a href="#s2">2. Video — Table queries overview</a>
+    <a href="#s3">3. Exercise — On-time delivery (1.7.c)</a>
+    <a href="#s4">4. Solutions — On-time delivery (1.7.d)</a>
+    <a href="#s5">5. Exercise — Days of supply (1.7.e)</a>
+    <a href="#s6">6. Example code, consolidated</a>
+    <a href="#s7">7. Key takeaways</a>
+    <div class="toc-sources">
+      <span class="tag tag-slides">slides</span> &nbsp;
+      <span class="tag tag-video">video</span> &nbsp;
+      <span class="tag tag-demo">demo/exercise</span>
+    </div>
+  </nav>
+
+  <main>
+    <header class="page-head">
+      <div class="eyebrow">ISA 512 · Module 1.7</div>
+      <h1>Table Queries</h1>
+      <p>The slide deck, the lecture video, and all three exercise/solution videos for M1.7 — combined into one working reference. This module has no separate graded assignment; every exercise below is embedded directly in its video.</p>
+    </header>
+
+    <div class="sources">
+      <strong>Sources combined in this note</strong>
+      <ul>
+        <li>Slides: <code class="inline">1.7.a - table queries - Tagged.pdf</code></li>
+        <li>Videos: <code class="inline">ISA512 1.7a Table Queries.srt</code>, <code class="inline">1.7.c - exercise (on-time delivery).srt</code>, <code class="inline">1.7.d - solutions to exercise (on-time delivery).srt</code>, <code class="inline">1.7.e - exercise (days of supply).srt</code></li>
+        <li>Files: <code class="inline">1.7.c Freight analysis (begin).pbix</code>, <code class="inline">ContosoRetailDW.pbix</code></li>
+        <li><code class="inline">ModuleSummary.txt</code> (referred to in-video as the module page)</li>
+      </ul>
+    </div>
+
+    <section id="s1">
+      <h2><span class="secnum">1</span> Slide content — Table Queries (1.7.a) <span class="tag tag-slides">slides</span></h2>
+      <ul>
+        <li><strong>EVALUATE</strong> <code class="inline">&lt;table expression&gt;</code> runs a table expression directly in DAX Query View, outside of any visual. The table expression can be a bare table name or a full nested table query.</li>
+        <li><strong>Table functions revisited as table queries</strong>: <code class="inline">FILTER</code>, <code class="inline">ALL</code>, <code class="inline">VALUES</code>, and <code class="inline">DISTINCT</code> all already return a table, so they can stand alone under <code class="inline">EVALUATE</code>. <strong><code class="inline">RELATEDTABLE</code> cannot</strong> — it requires an existing row context (from an iterator or calculated column) to know which "current row" to relate from, so it only makes sense nested inside something that already supplies one.</li>
+        <li><strong><code class="inline">CALCULATETABLE</code></strong>: the table-returning counterpart to <code class="inline">CALCULATE</code>. Applies filter arguments to a table expression exactly like a slicer would — including performing context transition where needed.</li>
+        <li><strong><code class="inline">ADDCOLUMNS</code> + <code class="inline">SUMMARIZE</code></strong>: <code class="inline">ADDCOLUMNS</code> appends one or more ad hoc columns to an existing table, each computed in its own row context. <code class="inline">SUMMARIZE</code> performs a group-by — pairing the two lets you build a grouped table with an aggregate column in one expression.</li>
+        <li><strong><code class="inline">TOPN</code></strong>: returns the top N rows of a table with respect to a given expression.</li>
+        <li><strong><code class="inline">GENERATE</code></strong>: <code class="inline">GENERATE(table1, table2)</code> — for each row of table1, evaluates table2 in that row's context, and stacks the results. Effectively a row-context-aware join with no relationship-traversal syntax required.</li>
+        <li><strong>Combining them</strong>: <code class="inline">GENERATE</code> wrapping a <code class="inline">TOPN</code> is the standard shape for "top N rows per group."</li>
+      </ul>
+    </section>
+
+    <section id="s2">
+      <h2><span class="secnum">2</span> Video walkthrough — Table Queries overview <span class="tag tag-video">video</span></h2>
+      <p><code class="inline">ISA512 1.7a Table Queries.srt</code> — the lecture companion to the slides, demonstrated in <strong>DAX Studio</strong> (a free add-in for Excel and a standalone app for Power BI). DAX Studio can query the data model behind either tool and is called out specifically as a good way to <strong>export data out of Power BI</strong>, something Power BI itself doesn't make easy.</p>
+      <ul>
+        <li><code class="inline">EVALUATE</code> is a required keyword — the simplest possible query is just <code class="inline">EVALUATE Customer</code>, which dumps the entire table.</li>
+        <li><strong><code class="inline">CALCULATETABLE</code> vs. <code class="inline">FILTER</code>, explained directly</strong>: CALCULATETABLE doesn't perform aggregation — it's purely a filter on columns that already exist (e.g. <code class="inline">CALCULATETABLE(Product, Product[Color]="Red")</code>). <code class="inline">FILTER</code> can do that too, but can <em>additionally</em> filter on conditions that involve an aggregation (e.g. <code class="inline">Sales Amount &gt; 1000000</code>) — because FILTER supplies a row context, and an aggregation evaluated inside that row context needs <strong>context transition</strong> to mean anything. That's exactly why a FILTER condition built on a measure needs <code class="inline">CALCULATE</code> wrapped around it: <em>"if you don't have calculate there, your filter will not work — it won't perform context transition."</em> CALCULATETABLE doesn't have this problem because it isn't row-context-based in the first place.</li>
+        <li><strong><code class="inline">ADDCOLUMNS</code></strong> is the same function used earlier to build a date table (M1.6) — it takes a table and adds columns to it. Combined with <code class="inline">SUMMARIZE</code>, it can group a fact table down to unique combinations of two dimension columns (e.g. Category × Subcategory) and attach a <code class="inline">"Sales"</code> aggregate column to each combination in one step. Skip SUMMARIZE if you just want to add a column to a table that's already at the grain you need.</li>
+        <li><strong><code class="inline">TOPN</code> walkthrough</strong>: <code class="inline">TOPN(10, &lt;table with a Sales column&gt;, [Sales])</code> — once an ad hoc column (like <code class="inline">"Sales"</code>) is defined earlier in the same query, it's referenced afterward in square brackets, e.g. <code class="inline">[Sales]</code>. Wrapping the whole thing in <code class="inline">CALCULATETABLE(..., Product[Color]="Red")</code> gets you the top 10 <em>red</em> products — because CALCULATETABLE's filter applies before TOPN does its ranking.</li>
+        <li><strong><code class="inline">GENERATE</code> walkthrough</strong>: think of it as a loop — it iterates the second table once for every row of the first. Demonstrated with <code class="inline">GENERATE(VALUES('Product Category'[Category]), RELATEDTABLE('Product Subcategory'))</code>: for each distinct category, it retrieves the full set of related subcategory rows and lists them underneath. If you don't need every subcategory column, wrap the <code class="inline">RELATEDTABLE</code> call in <code class="inline">SELECTCOLUMNS</code> to keep just the one you want.</li>
+        <li><strong>Combining TOPN + GENERATE</strong>: <code class="inline">GENERATE(VALUES('Product Category'[Category]), TOPN(3, ..., [Sales]))</code> — for every distinct category, find its own top 3 products by total quantity sold. Each category contributes up to 3 rows to the final result (fewer only if it has fewer than 3 products with any sales at all).</li>
+      </ul>
+    </section>
+
+    <section id="s3">
+      <h2><span class="secnum">3</span> Exercise — On-time delivery (1.7.c) <span class="tag tag-demo">demo/exercise</span></h2>
+      <p><code class="inline">1.7.c - exercise (on-time delivery).srt</code>, file: <code class="inline">1.7.c Freight analysis (begin).pbix</code>. Structured as a series of "pause the video and try it yourself" prompts — reconstructed here with the actual DAX reached in each step.</p>
+
+      <div class="callout exercise">
+        <span class="elabel">Task 1</span>
+        <p>Create a measure for <strong>OTD %</strong> (on-time delivery percent), where on-time is defined as any order whose <strong>required date is ≥ ship date</strong>. Hint given in the video: it's an average.</p>
+      </div>
+<pre><code>OTD % =
+AVERAGEX (
+    Orders,
+    IF ( Orders[Required Date] &gt;= Orders[Ship Date], 1, 0 )
+)</code></pre>
+      <div class="callout rule">
+        <span class="elabel">The &gt; vs. &gt;= gotcha, caught live</span>
+        <p>Writing the condition as <code class="inline">&gt;</code> instead of <code class="inline">&gt;=</code> gives OTD % = <strong>39%</strong>; correcting it to <code class="inline">&gt;=</code> jumps the result to <strong>~78–79%</strong>. Per the business definition, a shipment on the exact required date <em>is</em> on time — a single missing equals sign nearly doubled the reported performance number. A reminder that DAX gives zero warning for this kind of error: both versions run fine, only one is right.</p>
+      </div>
+
+      <p>Second issue: sorting the <code class="inline">Orders</code> table shows a number of orders with a <strong>blank Ship Date</strong> (not yet shipped) — these shouldn't count as either on-time or late, so they need to be excluded from the average rather than silently scored as 0. Three equivalent fixes, all confirmed in the video to give the same result (<strong>78.61%</strong>):</p>
+<pre><code><span class="kw">-- A: nested IF, exclude blanks inline</span>
+OTD % =
+AVERAGEX (
+    Orders,
+    IF (
+        ISBLANK ( Orders[Ship Date] ),
+        BLANK (),
+        IF ( Orders[Required Date] &gt;= Orders[Ship Date], 1, 0 )
+    )
+)
+
+<span class="kw">-- B: pre-filter the table being iterated</span>
+OTD % =
+AVERAGEX (
+    FILTER ( Orders, NOT ( ISBLANK ( Orders[Ship Date] ) ) ),
+    IF ( Orders[Required Date] &gt;= Orders[Ship Date], 1, 0 )
+)
+
+<span class="kw">-- C: CALCULATE with a filter argument around the original measure logic</span>
+OTD % =
+CALCULATE (
+    AVERAGEX ( Orders, IF ( Orders[Required Date] &gt;= Orders[Ship Date], 1, 0 ) ),
+    NOT ( ISBLANK ( Orders[Ship Date] ) )
+)</code></pre>
+      <p>Sliced by Country in a matrix: <strong>Canada</strong> has the highest OTD %, the <strong>United States</strong> the lowest.</p>
+
+      <div class="callout exercise">
+        <span class="elabel">Task 2</span>
+        <p>Create <strong>OTD % YTD</strong> using the time-intelligence functions from M1.6 — the video explicitly expects you to do this unassisted at this point.</p>
+      </div>
+<pre><code>OTD % YTD = CALCULATE ( [OTD %], DATESYTD ( 'Date'[Date] ) )</code></pre>
+      <p>This assumes a working date table — checked and fixed live: <code class="inline">Month Number</code> and <code class="inline">Weekday Number</code> hidden from report view, <code class="inline">Month</code> given <code class="inline">Month Number</code> as its sort-by column, <code class="inline">Weekday</code> given <code class="inline">Weekday Number</code> as its sort-by column, and the table marked as a date table — all M1.6 setup steps, called out here as prerequisites that are easy to forget once you're several modules further in.</p>
+
+      <div class="callout exercise">
+        <span class="elabel">Task 3 — this is where table queries actually become necessary</span>
+        <p>Given an <strong>aspired OTD level of 85%</strong>, what percent of customers have reached it?</p>
+      </div>
+      <p>The video's own framing of why a plain measure can't do this: to compute "percent of customers above a threshold" you need OTD % <em>per customer</em> sitting somewhere filterable — if it were a calculated column on the Customer table you could just filter and count. But it can't be a calculated column (it needs an aggregation over Orders). The fix is to build that per-customer table <em>on the fly</em>, inside the measure, with <code class="inline">ADDCOLUMNS</code>:</p>
+<pre><code>Percent Customers with Aspired OTD =
+VAR OTDTable =
+    ADDCOLUMNS (
+        VALUES ( Customers[Company Name] ),
+        "OTD", [OTD %]
+    )
+VAR NumberAspired  = COUNTROWS ( FILTER ( OTDTable, [OTD] &gt;= 0.85 ) )
+VAR NumberCustomers = COUNTROWS ( OTDTable )
+RETURN
+    DIVIDE ( NumberAspired, NumberCustomers )</code></pre>
+      <div class="callout rule">
+        <span class="elabel">Why the denominator isn't just COUNTROWS(Customers)</span>
+        <p>Counting the entire <code class="inline">Customers</code> table would silently assume every customer has at least one order. If there are inactive customers with no sales at all, they shouldn't be in the denominator of an OTD-performance question. Counting rows of <code class="inline">OTDTable</code> instead works because that table was already built by iterating over <em>customers who have an OTD %</em> — i.e., customers with at least one order.</p>
+      </div>
+      <p>Result: about <strong>10%</strong> of customers overall. Sliced by country in a matrix (sorted descending): <strong>Mexico</strong> leads at roughly <strong>18–19%</strong>, every other country falls below the 10% line.</p>
+    </section>
+
+    <section id="s4">
+      <h2><span class="secnum">4</span> Solutions — On-time delivery (1.7.d) <span class="tag tag-demo">demo/exercise</span></h2>
+      <p><code class="inline">1.7.d - solutions to exercise (on-time delivery).srt</code> — three follow-on tasks left as take-home problems in 1.7.c, solved here.</p>
+
+      <h3>4.1 Percent of products with aspired OTD</h3>
+      <p>Same pattern as the customer version, just swapping the grouping column:</p>
+<pre><code>Percent Products with Aspired OTD =
+VAR OTDTable =
+    ADDCOLUMNS (
+        VALUES ( Product[Product Name] ),
+        "OTD", [OTD %]
+    )
+VAR NumberAspired = COUNTROWS ( FILTER ( OTDTable, [OTD] &gt;= 0.85 ) )
+VAR NumberProducts = COUNTROWS ( OTDTable )
+RETURN
+    DIVIDE ( NumberAspired, NumberProducts )</code></pre>
+      <p>Result: <strong>5%</strong> of products. Slicing the underlying product list by Category shows only a handful of categories with any qualifying products at all — <strong>Beverages, Condiments, Seafood, Confections</strong> (in that order); every other category has zero products meeting the 85% bar.</p>
+
+      <h3>4.2 Percent of customer–product combinations at a 65% "acceptable" OTD</h3>
+      <p>Here <code class="inline">VALUES</code> hits its limit: it can only return distinct values of <strong>one</strong> column, but this question needs a table keyed by the unique combination of <strong>customer and product together</strong>. The fix is <code class="inline">SUMMARIZE</code>, which can group by more than one column at once:</p>
+<pre><code>Acceptable Customer-Product OTD % =
+VAR OTDTable =
+    ADDCOLUMNS (
+        SUMMARIZE ( Orders, Orders[Customer ID], Orders[Item ID] ),
+        "OTD", [OTD %]
+    )
+VAR OTDTableNoBlank = FILTER ( OTDTable, NOT ( ISBLANK ( [OTD] ) ) )
+VAR NumberAcceptable = COUNTROWS ( FILTER ( OTDTableNoBlank, [OTD] &gt;= 0.65 ) )
+VAR NumberCombinations = COUNTROWS ( OTDTableNoBlank )
+RETURN
+    DIVIDE ( NumberAcceptable, NumberCombinations )</code></pre>
+      <div class="callout rule">
+        <span class="elabel">Rule</span>
+        <p>Whenever an ad hoc column needs to be computed for a unique combination of <strong>more than one</strong> column, reach for <code class="inline">SUMMARIZE</code> — <code class="inline">VALUES</code> and <code class="inline">DISTINCT</code> are single-column tools only.</p>
+      </div>
+      <p>Building the raw <code class="inline">SUMMARIZE</code> table first (dropped into a temporary table via <strong>Table tools → New table</strong> just to inspect it — a good habit called out explicitly: <em>"it's good practice to see what your table variable holds in it"</em>) turned up <strong>4,579 rows</strong>, several with a <strong>blank</strong> OTD — customer/product pairs that summarize can produce without a clean matching OTD value. Left uncleaned, those blanks inflate the denominator with combinations that shouldn't count. Filtering both the numerator and the denominator through <code class="inline">NOT(ISBLANK([OTD]))</code> first fixes it. Final result: <strong>75%</strong> of customer–product combinations meet the 65% acceptable bar.</p>
+
+      <h3>4.3 Total revenue for customers who hit the aspired OTD — a table query as a CALCULATE filter</h3>
+      <p>The hint from 1.7.c pays off here directly: find the qualifying customer list with a table query, then hand it to <code class="inline">CALCULATE</code> as a filter argument.</p>
+<pre><code>Aspired OTD Sales =
+VAR AspiredOTDCustomers =
+    FILTER (
+        ADDCOLUMNS ( VALUES ( Customers[Customer ID] ), "OTD", [OTD %] ),
+        [OTD] &gt; 0.85
+    )
+RETURN
+    CALCULATE ( [Total Revenue], AspiredOTDCustomers )</code></pre>
+      <p>Result: roughly <strong>$202,000</strong>. The variable's table is passed to <code class="inline">CALCULATE</code> by name, exactly like any other filter argument — it restricts <code class="inline">[Total Revenue]</code> to only the customer keys that survived the FILTER, with no need for the revenue measure itself to know anything about OTD.</p>
+    </section>
+
+    <section id="s5">
+      <h2><span class="secnum">5</span> Exercise — Days of supply (1.7.e) <span class="tag tag-demo">demo/exercise</span></h2>
+      <p><code class="inline">1.7.e - exercise (days of supply).srt</code>. A second full example of building a table query end to end, this time to compute <strong>Daily Sales Units</strong> and <strong>Days of Supply</strong> per product.</p>
+
+      <h3>5.1 Daily Sales Units — first pass, and the missing-CALCULATE bug</h3>
+      <p>Goal: a table query with one row per date that had any sales, and a column holding that date's total quantity sold — then average across those rows.</p>
+<pre><code>Daily Sales Units =
+VAR DailySalesTable =
+    ADDCOLUMNS (
+        VALUES ( Orders[Order Date] ),
+        "Quantity Sold", SUM ( Orders[Quantity] )   <span class="kw">-- missing CALCULATE — see below</span>
+    )
+RETURN
+    AVERAGEX ( DailySalesTable, [Quantity Sold] )</code></pre>
+      <div class="callout rule">
+        <span class="elabel">The same context-transition bug as M1.5, one module later</span>
+        <p>Checked by materializing <code class="inline">DailySalesTable</code> as a real table (Table tools → New table, in Data view — "good practice to see what your table variable holds"): every row showed the <strong>identical grand-total</strong> quantity instead of that date's own total. Reason: <code class="inline">ADDCOLUMNS</code> gives each row a <em>row context</em>, but a bare <code class="inline">SUM(Orders[Quantity])</code> doesn't automatically turn that row context into a filter on Orders — exactly the row-context-vs-filter-context gap first seen with CALCULATE in M1.5. The fix is to wrap the aggregation in <code class="inline">CALCULATE</code> to force context transition:</p>
+      </div>
+<pre><code>"Quantity Sold", CALCULATE ( SUM ( Orders[Quantity] ) )</code></pre>
+      <p>With that fix, each date's <code class="inline">Quantity Sold</code> correctly reflects only that date's own orders, and <code class="inline">AVERAGEX</code> now averages real per-day totals.</p>
+
+      <h3>5.2 Imputing zero for days with no sales</h3>
+      <p>Days with zero sales don't appear as <code class="inline">0</code> in <code class="inline">DailySalesTable</code> — <code class="inline">CALCULATE(SUM(...))</code> returns <strong>BLANK()</strong> for them instead, and <code class="inline">AVERAGEX</code> (like <code class="inline">AVERAGE</code>) silently drops blanks rather than counting them as zero. That inflates the average for any product with sparse sales. Fix: force blanks to zero before averaging.</p>
+<pre><code>Daily Sales Units =
+VAR DailySalesTable =
+    ADDCOLUMNS (
+        VALUES ( Orders[Order Date] ),
+        "Quantity Sold", CALCULATE ( SUM ( Orders[Quantity] ) )
+    )
+RETURN
+    AVERAGEX (
+        DailySalesTable,
+        IF ( ISBLANK ( [Quantity Sold] ), 0, [Quantity Sold] )
+    )</code></pre>
+      <p>Noted as a small effect in the aggregate numbers shown live, but a real one for individual low-volume products — the same "blank ≠ zero" caution that showed up in M1.2's delivery-days work, here in the opposite direction (there, blanks correctly needed to be excluded; here, they correctly need to be treated as zero, because "no sales that day" is a real zero, not a missing measurement).</p>
+      <p><strong>Simpler alternative mentioned in passing</strong> (not the table-query approach, shown only for comparison): <code class="inline">DIVIDE(SUM(Orders[Quantity]), DISTINCTCOUNT(Orders[Order Date]))</code> — total quantity over the count of distinct selling days. Called out as "simpler," but the video's actual purpose was to demonstrate the table-query technique, so this shortcut is a footnote, not the intended answer.</p>
+
+      <h3>5.3 Days of Supply</h3>
+<pre><code>Days of Supply = DIVIDE ( SUM ( Product[Units in Stock] ), [Daily Sales Units] )</code></pre>
+      <div class="callout rule">
+        <span class="elabel">Why <code class="inline">SUM(Product[Units in Stock])</code> and not a bare column reference</span>
+        <p>This is a <strong>measure</strong>, not a calculated column — there's no row context, so <code class="inline">Product[Units in Stock]</code> can't be referenced directly even though, in whatever filter context the measure lands in, there's only a single matching value. It still has to be wrapped in an aggregator (<code class="inline">SUM</code> here) to resolve to a scalar. The same expression <em>would</em> work as a bare column reference inside a calculated column on the Product table, precisely because a calculated column supplies the row context this measure doesn't have.</p>
+      </div>
+      <p>Sanity check: a "syrup" product with ~13 units in stock and ~12 daily sales units comes out to roughly <strong>1 day of supply</strong> — checks out.</p>
+
+      <h3>5.4 Folding it into one self-contained measure — and why not a calculated column</h3>
+      <p>The whole thing collapses into a single measure once <code class="inline">Daily Sales Units</code> is inlined as a variable instead of kept as its own measure:</p>
+<pre><code>Days of Supply =
+VAR DailySalesTable =
+    ADDCOLUMNS (
+        VALUES ( Orders[Order Date] ),
+        "Quantity Sold", CALCULATE ( SUM ( Orders[Quantity] ) )
+    )
+VAR DailySalesUnits =
+    AVERAGEX ( DailySalesTable, IF ( ISBLANK ( [Quantity Sold] ), 0, [Quantity Sold] ) )
+RETURN
+    DIVIDE ( SUM ( Product[Units in Stock] ), DailySalesUnits )</code></pre>
+      <p>The video also builds this same logic as a <strong>calculated column</strong> on the Product table to show that it technically works there too (a calculated column's row context makes <code class="inline">Product[Units in Stock]</code> resolvable without <code class="inline">SUM</code>) — then explicitly rejects that version:</p>
+      <div class="callout rule">
+        <span class="elabel">Why the table-query measure wins over the calculated column</span>
+        <p><em>"We don't want it to be a calculated column because we can do it in a measure, and we don't need to create these unnecessary calculated columns — they hold data, they increase the size of our file, and reduce the efficiency."</em> This is the concrete payoff of table queries as a technique: they let you reach a per-row result inside a measure, which is exactly what used to force a calculated column onto the model.</p>
+      </div>
+      <p><em>Aside from the module page: total <code class="inline">Units in Stock</code> is not summable across time — a stock-on-hand snapshot doesn't add up meaningfully year over year the way a transaction total does, which is part of why this measure is built from Orders (a true transaction table) rather than by trying to aggregate Units in Stock over a date hierarchy.</em></p>
+    </section>
+
+    <section id="s6">
+      <h2><span class="secnum">6</span> Example DAX code — consolidated reference</h2>
+<pre><code><span class="kw">-- EVALUATE: the simplest table query</span>
+EVALUATE Customer
+
+<span class="kw">-- CALCULATETABLE: filter only, no aggregation allowed in the condition</span>
+EVALUATE
+CALCULATETABLE ( Product, Product[Color] = "Red" )
+
+<span class="kw">-- FILTER: row context, so aggregation-based conditions need CALCULATE inside</span>
+EVALUATE
+FILTER ( Product, CALCULATE ( SUM ( Sales[Quantity] ) ) &gt; 1000 )
+
+<span class="kw">-- ADDCOLUMNS + SUMMARIZE: group by, with an aggregate column</span>
+EVALUATE
+ADDCOLUMNS (
+    SUMMARIZE ( Sales, 'Product Category'[Category], 'Product Subcategory'[Subcategory] ),
+    "Sales", [Sales Amount]
+)
+
+<span class="kw">-- TOPN: rank, referencing an ad hoc column defined earlier via square brackets</span>
+EVALUATE
+TOPN ( 10, ADDCOLUMNS ( VALUES ( Product[Product Name] ), "Sales", [Sales Amount] ), [Sales] )
+
+<span class="kw">-- GENERATE: per-row Cartesian join</span>
+EVALUATE
+GENERATE ( VALUES ( 'Product Category'[Category] ), RELATEDTABLE ( 'Product Subcategory' ) )
+
+<span class="kw">-- TOPN + GENERATE: top N per group</span>
+EVALUATE
+GENERATE (
+    VALUES ( 'Product Category'[Category] ),
+    TOPN ( 3, ADDCOLUMNS ( VALUES ( Product[Product Name] ), "Sales", CALCULATE ( SUM ( Sales[Quantity] ) ) ), [Sales] )
+)
+
+<span class="kw">-- Per-entity table built on the fly, then filtered / counted (the OTD pattern)</span>
+VAR EntityOTD = ADDCOLUMNS ( VALUES ( Table[Key] ), "OTD", [SomeMeasure] )
+VAR Qualifying = FILTER ( EntityOTD, [OTD] &gt;= 0.85 )
+RETURN DIVIDE ( COUNTROWS ( Qualifying ), COUNTROWS ( EntityOTD ) )
+
+<span class="kw">-- Unique combination of TWO columns needs SUMMARIZE, not VALUES</span>
+SUMMARIZE ( Orders, Orders[Customer ID], Orders[Item ID] )
+
+<span class="kw">-- A table query used as a CALCULATE filter argument</span>
+VAR Qualifying = FILTER ( ADDCOLUMNS ( VALUES ( Table[Key] ), "M", [SomeMeasure] ), [M] &gt; 0.85 )
+RETURN CALCULATE ( [TotalRevenue], Qualifying )
+
+<span class="kw">-- Context transition inside ADDCOLUMNS' row context — don't forget CALCULATE</span>
+"Quantity Sold", CALCULATE ( SUM ( Orders[Quantity] ) )   <span class="kw">-- not just SUM(...)</span>
+
+<span class="kw">-- Blank-safe averaging where blank really does mean zero</span>
+AVERAGEX ( DailySalesTable, IF ( ISBLANK ( [Quantity Sold] ), 0, [Quantity Sold] ) )</code></pre>
+    </section>
+
+    <section id="s7">
+      <h2><span class="secnum">7</span> Key takeaways / self-check</h2>
+      <ul>
+        <li>Can you state, without looking it up, why <code class="inline">CALCULATETABLE</code> can't filter on an aggregation-based condition but <code class="inline">FILTER</code> can — and why <code class="inline">FILTER</code> needs <code class="inline">CALCULATE</code> wrapped around the aggregation to make that work?</li>
+        <li>Given a business question that needs "per-entity value, then filter/count," can you reach for <code class="inline">ADDCOLUMNS(VALUES(...), "X", [Measure])</code> as a table query, rather than reaching for a calculated column you can't actually build?</li>
+        <li>Do you know when <code class="inline">VALUES</code>/<code class="inline">DISTINCT</code> stop being enough and <code class="inline">SUMMARIZE</code> becomes necessary (unique combination of more than one column)?</li>
+        <li>Inside an <code class="inline">ADDCOLUMNS</code> row context, can you tell when a bare aggregation like <code class="inline">SUM(...)</code> will silently return the grand total instead of a per-row value, and why wrapping it in <code class="inline">CALCULATE</code> fixes it? (This is the exact same mechanic as M1.5's context transition, one module later, in a new disguise.)</li>
+        <li>Can you tell, for a given blank value in your data, whether it should be <strong>excluded</strong> from an average (M1.2's delivery days, M1.7's customer-product OTD) or <strong>treated as zero</strong> (M1.7's daily sales units) — and explain why those are different situations rather than a contradiction?</li>
+        <li>Can you build a table query, save it as a <code class="inline">VAR</code>, and pass it into <code class="inline">CALCULATE</code> as a filter argument — and explain why that's different from filtering inside the measure's own aggregation?</li>
+      </ul>
+    </section>
+
+    <footer>Built from the M1.7 slide deck and all four lecture/exercise transcripts — check it against your own .pbix file rather than memorizing it as-is. Some measure names and exact numbers were reconstructed from a spoken walkthrough rather than read off-screen, so verify against the source video where precision matters.</footer>
+  </main>
+</div>
+
+<script>
+  (function(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+    var sections = links.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+    if(!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var idx = sections.indexOf(entry.target);
+        if(idx === -1) return;
+        if(entry.isIntersecting){
+          links.forEach(function(l){ l.classList.remove('active'); });
+          links[idx].classList.add('active');
+        }
+      });
+    }, { rootMargin: '-10% 0px -75% 0px', threshold: 0 });
+    sections.forEach(function(s){ io.observe(s); });
+  })();
+</script>

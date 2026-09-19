@@ -1,0 +1,491 @@
+<title>M1.6 Study Notes</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ink:#1c2530; --ink-soft:#57626d; --ink-faint:#7c8792;
+    --paper:#eef0ea; --card:#f8f9f4; --card-border:rgba(28,37,48,.12);
+    --row:#a9691f; --row-bg:rgba(169,105,31,.10);
+    --filter:#1f6f89; --filter-bg:rgba(31,111,137,.10);
+    --neutral:#4a5560; --neutral-bg:rgba(74,85,96,.08);
+    --warn:#9a3f3f; --warn-bg:rgba(154,63,63,.08);
+    --good:#4b7a4e; --good-bg:rgba(75,122,78,.10);
+    --code-bg:#1c2530; --code-ink:#e7e9e2; --code-accent:#e0b872;
+    --table-head:rgba(28,37,48,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#e7e9e2; --ink-soft:#aab2ab; --ink-faint:#828b85;
+      --paper:#14181a; --card:#1b2023; --card-border:rgba(231,233,226,.13);
+      --row:#dd9a4d; --row-bg:rgba(221,154,77,.13);
+      --filter:#5cb0cc; --filter-bg:rgba(92,176,204,.13);
+      --neutral:#a9b2ab; --neutral-bg:rgba(169,178,171,.10);
+      --warn:#e08a8a; --warn-bg:rgba(224,138,138,.12);
+      --good:#7fbb82; --good-bg:rgba(127,187,130,.12);
+      --code-bg:#0e1113; --code-ink:#e7e9e2; --code-accent:#e6b579;
+      --table-head:rgba(231,233,226,.06);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#e7e9e2; --ink-soft:#aab2ab; --ink-faint:#828b85;
+    --paper:#14181a; --card:#1b2023; --card-border:rgba(231,233,226,.13);
+    --row:#dd9a4d; --row-bg:rgba(221,154,77,.13);
+    --filter:#5cb0cc; --filter-bg:rgba(92,176,204,.13);
+    --neutral:#a9b2ab; --neutral-bg:rgba(169,178,171,.10);
+    --warn:#e08a8a; --warn-bg:rgba(224,138,138,.12);
+    --good:#7fbb82; --good-bg:rgba(127,187,130,.12);
+    --code-bg:#0e1113; --code-ink:#e7e9e2; --code-accent:#e6b579;
+    --table-head:rgba(231,233,226,.06);
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:16px; line-height:1.6; }
+  h1,h2,h3,h4{ font-family:"IBM Plex Serif",Georgia,serif; text-wrap:balance; margin:0; }
+  code,.mono{ font-family:"IBM Plex Mono","SFMono-Regular",monospace; }
+  a{ color:var(--filter); }
+
+  .shell{ display:grid; grid-template-columns:250px minmax(0,1fr); max-width:1140px; margin:0 auto; }
+  @media (max-width:880px){ .shell{ grid-template-columns:1fr; } .toc{ position:static !important; height:auto !important; } }
+
+  .toc{ position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto; padding:28px 14px 28px 22px; border-right:1px solid var(--card-border); scrollbar-width:thin; }
+  .toc-title{ font-family:"IBM Plex Mono"; font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:14px; }
+  .toc a{ display:block; text-decoration:none; font-size:13px; color:var(--ink-soft); padding:6px 10px; border-radius:6px; line-height:1.35; transition:background .15s,color .15s; }
+  .toc a:hover{ background:var(--card); color:var(--ink); }
+  .toc a.active{ background:var(--filter-bg); color:var(--filter); font-weight:500; }
+  .toc .toc-sources{ margin-top:18px; padding-top:14px; border-top:1px solid var(--card-border); font-size:11.5px; color:var(--ink-faint); line-height:1.6; }
+
+  main{ padding:44px 44px 100px; min-width:0; }
+  @media (max-width:640px){ main{ padding:28px 18px 70px; } }
+
+  .page-head{ margin-bottom:34px; padding-bottom:26px; border-bottom:1px solid var(--card-border); }
+  .eyebrow{ font-family:"IBM Plex Mono"; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:10px; }
+  .page-head h1{ font-size:clamp(26px,4vw,36px); font-weight:600; }
+  .page-head p{ color:var(--ink-soft); max-width:66ch; margin-top:10px; font-size:15px; }
+
+  section{ margin-bottom:44px; scroll-margin-top:18px; }
+  h2{ font-size:21px; font-weight:600; display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+  h2 .secnum{ font-family:"IBM Plex Mono"; font-size:13px; color:var(--ink-faint); font-weight:500; }
+  h3{ font-size:16px; font-weight:600; margin:22px 0 10px; }
+  h4{ font-size:14px; font-weight:600; margin:16px 0 8px; }
+  p{ margin:0 0 12px; }
+  ul,ol{ margin:0 0 14px; padding-left:22px; }
+  li{ margin-bottom:6px; }
+  strong{ color:var(--ink); }
+
+  .tag{ font-family:"IBM Plex Mono"; font-size:10px; letter-spacing:.04em; text-transform:uppercase; padding:3px 9px; border-radius:20px; white-space:nowrap; }
+  .tag-slides{ background:var(--neutral-bg); color:var(--neutral); }
+  .tag-video{ background:var(--filter-bg); color:var(--filter); }
+  .tag-demo{ background:var(--row-bg); color:var(--row); }
+  .tag-assignment{ background:var(--good-bg); color:var(--good); }
+
+  pre{ background:var(--code-bg); color:var(--code-ink); border-radius:8px; padding:14px 16px; overflow-x:auto; margin:10px 0 14px; font-size:13px; line-height:1.6; }
+  pre code{ font-family:"IBM Plex Mono"; }
+  .kw{ color:var(--code-accent); }
+  code.inline{ background:var(--card); border:1px solid var(--card-border); border-radius:4px; padding:1px 6px; font-size:0.9em; }
+
+  .dtable-wrap{ overflow-x:auto; margin:10px 0 16px; border-radius:8px; border:1px solid var(--card-border); }
+  table.dtable{ border-collapse:collapse; width:100%; font-size:13.5px; }
+  table.dtable th, table.dtable td{ padding:8px 14px; text-align:left; border-bottom:1px solid var(--card-border); vertical-align:top; }
+  table.dtable th{ background:var(--table-head); font-family:"IBM Plex Mono"; font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-soft); }
+  table.dtable tr:last-child td{ border-bottom:none; }
+
+  .checklist{ list-style:none; padding-left:0; margin:10px 0 16px; display:flex; flex-direction:column; gap:8px; }
+  .checklist li{ display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:var(--ink-soft); margin-bottom:0; }
+  .checklist li::before{ content:"☐"; color:var(--warn); font-size:15px; line-height:1.5; flex-shrink:0; }
+
+  .callout{ border-left:3px solid var(--card-border); background:var(--card); border-radius:0 8px 8px 0; padding:14px 18px; margin:14px 0; }
+  .callout.exercise{ border-left-color:var(--row); background:var(--row-bg); }
+  .callout.exercise .elabel{ font-family:"IBM Plex Mono"; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--row); font-weight:600; display:block; margin-bottom:6px; }
+  .callout.rule{ border-left-color:var(--filter); background:var(--filter-bg); }
+  .callout.rule .elabel{ font-family:"IBM Plex Mono"; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--filter); font-weight:600; display:block; margin-bottom:6px; }
+  .callout p:last-child{ margin-bottom:0; }
+
+  .sources{ background:var(--card); border:1px solid var(--card-border); border-radius:10px; padding:16px 20px; font-size:13.5px; color:var(--ink-soft); margin-bottom:32px; }
+  .sources strong{ color:var(--ink); }
+  .sources ul{ margin:8px 0 0; padding-left:18px; }
+  .sources li{ margin-bottom:4px; }
+
+  footer{ padding-top:24px; border-top:1px solid var(--card-border); color:var(--ink-faint); font-size:13px; }
+  ::selection{ background:var(--filter-bg); }
+</style>
+
+<div class="shell">
+  <nav class="toc" id="toc">
+    <div class="toc-title">M1.6 Contents</div>
+    <a href="#s1">1. Slides — Time Intelligence</a>
+    <a href="#s2">2. Demo — Date table (1.6.b)</a>
+    <a href="#s3">3. Demo — Common functions (1.6.c)</a>
+    <a href="#s4">4. Demo/exercise — Creating a date table (1.6.d)</a>
+    <a href="#s5">5. Solutions — Exercises (1.6.e)</a>
+    <a href="#s6">6. Demo/exercise — USERELATIONSHIP (1.6.f)</a>
+    <a href="#s7">7. Example code, consolidated</a>
+    <a href="#s8">8. Key takeaways</a>
+    <div class="toc-sources">
+      <span class="tag tag-slides">slides</span> &nbsp;
+      <span class="tag tag-video">video</span> &nbsp;
+      <span class="tag tag-demo">demo/exercise</span>
+    </div>
+  </nav>
+
+  <main>
+    <header class="page-head">
+      <div class="eyebrow">ISA 512 · Module 1.6</div>
+      <h1>Time Intelligence</h1>
+      <p>The slide deck and all five demo/exercise videos for M1.6 — combined into one working reference. This module has no separate graded assignment; each video's embedded exercise is folded into its own section below.</p>
+    </header>
+
+    <div class="sources">
+      <strong>Sources combined in this note</strong>
+      <ul>
+        <li>Slides: <code class="inline">1.6.a - time intelligence - Tagged.pdf</code></li>
+        <li>Videos: <code class="inline">1.6.b - date table demo.srt</code>, <code class="inline">1.6.c - common time intelligence functions.srt</code>, <code class="inline">1.6.d - creating a date table.srt</code>, <code class="inline">1.6.e - solutions of the exercises.srt</code>, <code class="inline">1.6.f - USERELATIONSHIP.srt</code></li>
+        <li>Files: <code class="inline">1.6.c 06 Mixing time intelligence functions.pbix</code>, <code class="inline">1.6.f 05b Using multiple dates - USERELATIONSHIP.pbix</code>, <code class="inline">AdventureWorksDW-FactTables.pbix</code>, <code class="inline">AdventureWorksDW.pbix</code></li>
+        <li><code class="inline">summary.txt</code></li>
+      </ul>
+    </div>
+
+    <section id="s1">
+      <h2><span class="secnum">1</span> Slide content — Time Intelligence (1.6.a) <span class="tag tag-slides">slides</span></h2>
+      <ul>
+        <li><strong>Turn off auto date/time.</strong> Power BI's built-in "Auto date/time" setting silently creates a hidden calendar table for <em>every</em> date column in the model — wasteful, and not best practice. Disable it globally (Options → Global → Data Load) and per-file (Options → Current File → Data Load), under "Time intelligence."</li>
+        <li><strong>A date table is required</strong> for any of DAX's time-intelligence functions to work — built in DAX, Power Query, or SQL. All dates in the range must be present (no gaps), and fiscal calendars are possible via <code class="inline">CALENDARAUTO(fiscalYearEndMonth)</code>.</li>
+        <li><strong>CALENDARAUTO() vs. CALENDAR()</strong>:
+          <ul>
+            <li><code class="inline">CALENDARAUTO([fiscalYearEndMonth])</code> automatically spans every date-formatted column <em>in the entire model</em> — convenient, but exactly why a stray unrelated date column can blow out the range (see §2 below).</li>
+            <li><code class="inline">CALENDAR(startDate, endDate)</code> — the explicit, preferred form — anchored to the date column that actually matters.</li>
+          </ul>
+        </li>
+        <li>Standard date-table build pattern from the slides:
+<pre><code>DimDate =
+ADDCOLUMNS (
+    CALENDAR ( MIN ( Sales[Order Date] ), MAX ( Sales[Order Date] ) ),
+    "Year", YEAR ( [Date] ),
+    "Quarter", FORMAT ( [Date], "\QQ" ),
+    "Month", FORMAT ( [Date], "mmmm" ),
+    "Month Number", MONTH ( [Date] ),
+    "WeekDay", FORMAT ( [Date], "dddd" ),
+    "WeekDay Number", WEEKDAY ( [Date] )
+)</code></pre>
+        </li>
+        <li><strong>Marking a date table</strong>: best practice always; <strong>required</strong> whenever the relationship between the date table and a fact table uses a key column that isn't itself formatted as a date (a surrogate integer key, for instance) — this comes up directly in §5 and §6 below.</li>
+        <li><strong>Year-to-date</strong>: <code class="inline">CALCULATE(SUM(Sales[SalesAmount]), DATESBETWEEN('Date'[Date], DATE(YEAR(MAX('Date'[Date])),1,1), MAX('Date'[Date])))</code> — equivalently, <code class="inline">CALCULATE(SUM(Sales[SalesAmount]), DATESYTD('Date'[Date]))</code>.</li>
+        <li><strong>Same period last year</strong>: <code class="inline">DATEADD('Date'[Date], -1, YEAR)</code> ⇔ <code class="inline">SAMEPERIODLASTYEAR('Date'[Date])</code> — the latter is just the named one-year-back special case of the former, which works for any period (DAY/MONTH/QUARTER/YEAR) and either direction.</li>
+        <li><strong>Running total</strong> needs an explicit date filter, comparing every date to the last visible date in the current context:
+<pre><code>SalesAmountRT :=
+VAR LastVisibleDate = MAX ( 'Date'[Date] )
+RETURN
+    CALCULATE (
+        SUM ( Sales[SalesAmount] ),
+        FILTER ( ALL ( 'Date' ), 'Date'[Date] &lt;= LastVisibleDate )
+    )</code></pre>
+        </li>
+        <li><strong>Combining time-intelligence functions</strong>: <code class="inline">CALCULATE(SUM(Sales[SalesAmount]), DATESYTD(SAMEPERIODLASTYEAR('Date'[Date])))</code> — YTD, as of the same point last year.</li>
+      </ul>
+    </section>
+
+    <section id="s2">
+      <h2><span class="secnum">2</span> Demo — Date table demo <span class="tag tag-demo">demo/exercise</span></h2>
+      <p><code class="inline">1.6.b - date table demo.srt</code>. File model: a <code class="inline">Sales</code> table (100,000 rows) and a <code class="inline">Receipts</code> table (90,000 rows), both transaction tables, both sliced by a single shared <code class="inline">Date</code> table on the one side of a one-to-many relationship.</p>
+
+      <h3>2.1 Why CALENDARAUTO() over-reached</h3>
+      <p>The date table started out built like this:</p>
+<pre><code>Date =
+ADDCOLUMNS (
+    FILTER (
+        CALENDARAUTO (),
+        YEAR ( [Date] ) &gt;= YearFirstOrder
+    ),
+    <span class="kw">-- Year/Quarter/Month/etc. columns...</span>
+)
+<span class="kw">-- where YearFirstOrder = YEAR ( MIN ( Sales[Order Date] ) )</span></code></pre>
+      <p>With the <code class="inline">FILTER(... YEAR([Date]) &gt;= YearFirstOrder)</code> wrapper in place, this produced <strong>1,461 rows</strong>, correctly starting from <strong>2007</strong> — matching the sales table's actual minimum <code class="inline">Order Date</code> of January 2, 2007.</p>
+      <div class="callout exercise">
+        <span class="elabel">Live experiment: comment out the filter</span>
+        <p>With just <code class="inline">CALENDARAUTO()</code> and no year filter, the date table balloons to <strong>36,890 rows</strong>, reaching all the way back to <strong>1910</strong>. Why? <code class="inline">CALENDARAUTO()</code> scans <em>every date-formatted column in the entire data model</em> — not just <code class="inline">Sales[Order Date]</code> — and the culprit turned out to be <code class="inline">Customer[Birth Date]</code>, which had a value back in 1910. A completely unrelated dimension column silently expanded the calendar by nearly a century.</p>
+      </div>
+      <div class="callout rule">
+        <span class="elabel">Rule</span>
+        <p>This is exactly why the slides recommend the explicit <code class="inline">CALENDAR(start, end)</code> form over <code class="inline">CALENDARAUTO()</code> for anything beyond a quick prototype — larger date tables cost real memory, and <code class="inline">CALENDARAUTO()</code>'s "scan everything" behavior is a silent, easy-to-miss source of bloat.</p>
+      </div>
+
+      <h3>2.2 Rebuilding with CALENDAR(), anchored correctly</h3>
+      <p>Task posed mid-video (pause and try it yourself): replace <code class="inline">CALENDARAUTO()</code> with <code class="inline">CALENDAR(startDate, endDate)</code>, where the start date is January 1 of the year of the first sale, and the end date is December 31 of the year of the last sale.</p>
+<pre><code>Date =
+ADDCOLUMNS (
+    CALENDAR (
+        DATE ( YEAR ( MIN ( Sales[Order Date] ) ), 1, 1 ),
+        DATE ( YEAR ( MAX ( Sales[Order Date] ) ), 12, 31 )
+    ),
+    <span class="kw">-- same Year/Quarter/Month/etc. columns as before</span>
+)</code></pre>
+      <p>Verified against the underlying <code class="inline">Sales</code> table: minimum <code class="inline">Order Date</code> = Jan 2, 2007; maximum <code class="inline">Order Date</code> (in this specific demo file) landed at the end of December 2009 — and the rebuilt date table's range matched exactly, start to end.</p>
+
+      <h3>2.3 Marking the date table</h3>
+      <p>Table Tools → <strong>Mark as date table</strong>, select the date column, click OK. In this demo the primary/foreign key pair used for the relationship <em>was already</em> a proper date-typed column, so marking it here is "necessary and good practice" but not strictly load-bearing yet. The video explicitly flags that there <em>are</em> cases where the key isn't date-typed, and marking becomes required — that case shows up directly in §5 and §6.</p>
+    </section>
+
+    <section id="s3">
+      <h2><span class="secnum">3</span> Demo — Common time intelligence functions <span class="tag tag-demo">demo/exercise</span></h2>
+      <p><code class="inline">1.6.c - common time intelligence functions.srt</code>, file: <code class="inline">1.6.c 06 Mixing time intelligence functions.pbix</code>. Framing point made up front: a Sales Amount number sliced by year/month/date is meaningless without a <strong>benchmark</strong> — you need something comparable, like "what happened last year," before you can call a number good or bad.</p>
+
+      <h3>3.1 Same period last year</h3>
+<pre><code>Sales SPLY := CALCULATE ( [Sales Amount], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )</code></pre>
+      <div class="dtable-wrap">
+        <table class="dtable">
+          <tr><th>Month</th><th class="num">Sales Amount</th><th class="num">Sales SPLY</th><th class="num">YoY %</th></tr>
+          <tr><td>Jan 2007</td><td class="num">$794K</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>
+          <tr><td>Jan 2008</td><td class="num">$656K</td><td class="num">$794K</td><td class="num">&minus;17%</td></tr>
+        </table>
+      </div>
+      <p>January 2007's total ($794K) shows up exactly one year later as January 2008's <code class="inline">Sales SPLY</code> value, giving a direct YoY comparison — January 2008 was down about 17% versus the same month a year earlier.</p>
+
+      <h3>3.2 Year-to-date, and combining it with SPLY</h3>
+<pre><code>Sales YTD := CALCULATE ( [Sales Amount], DATESYTD ( 'Date'[Date] ) )
+<span class="kw">-- e.g., context = February 2008 → sums Jan 1, 2008 through Feb 29, 2008 → $1.2M</span>
+
+Sales YTD Last Year :=
+CALCULATE ( [Sales Amount], DATESYTD ( SAMEPERIODLASTYEAR ( 'Date'[Date] ) ) )
+<span class="kw">-- take the current context's dates, shift them a year back, THEN take year-to-date of that shifted range</span></code></pre>
+      <p>The video notes this could equally be written with explicit variables (get the current dates → shift them a year → compute YTD on the shifted set), but the nested-function form does the same thing more compactly, and is the version actually used in the file.</p>
+
+      <h3>3.3 Running total — why it never resets</h3>
+      <p>The same <code class="inline">Sales RT</code> pattern as the slides (<code class="inline">VAR LastVisibleDate = MAX('Date'[Date])</code>, then <code class="inline">CALCULATE([Sales Amount], FILTER(ALL('Date'), 'Date'[Date] &lt;= LastVisibleDate))</code>) is walked through concretely:</p>
+      <div class="callout rule">
+        <span class="elabel">Why FILTER(ALL(...)) doesn't need a lower bound</span>
+        <p>For the September 2011 row, the matrix's own context filter would normally restrict dates to Sept&nbsp;1–30, 2011. But <code class="inline">CALCULATE</code>'s filter arguments <strong>overwrite</strong> the existing context rather than intersect with it — so the <code class="inline">FILTER(ALL('Date'), 'Date'[Date] &lt;= LastVisibleDate)</code> argument completely replaces that Sept 1–30 window with just "on or before Sept 30, 2011." There's no lower bound left at all, so the sum always reaches back to the very first sale in the model — which is exactly the running-total behavior wanted.</p>
+      </div>
+    </section>
+
+    <section id="s4">
+      <h2><span class="secnum">4</span> Demo &amp; exercise — Creating a date table for two fact tables <span class="tag tag-demo">demo/exercise</span></h2>
+      <p><code class="inline">1.6.d - creating a date table.srt</code>. Two separate problems to solve in this file: (1) the date table needs to support <strong>two</strong> transaction tables (Internet Sales and Reseller Sales) at once, and (2) neither table's date key is actually formatted as a date.</p>
+
+      <h3>4.1 Problem 1 — the date keys are whole numbers, not dates</h3>
+      <p><code class="inline">OrderDateKey</code>, <code class="inline">DueDateKey</code>, and <code class="inline">ShipDateKey</code> are all stored as plain whole numbers in the form <code class="inline">YYYYMMDD</code> (e.g., 20070102). Trying to just change the column's data type to Date directly in Power BI throws an error — there's no automatic conversion path from an integer like that to a real date.</p>
+      <p><strong>Fix, done in Power Query ("Transform Data")</strong>, for each fact table:</p>
+      <ol>
+        <li>Select the key column (e.g., <code class="inline">OrderDateKey</code>) and change its type to <strong>Text</strong> first.</li>
+        <li><strong>Add Column → Custom Column</strong>, name it <code class="inline">Order Date</code>, with the formula:
+<pre><code>Order Date = Date.FromText ( [OrderDateKey] )</code></pre>
+        </li>
+        <li>Explicitly set the new column's type to <strong>Date</strong> (even though Power Query may already infer it correctly — being explicit avoids Power BI silently importing it as text instead).</li>
+        <li>Repeat the same three steps on the other fact table.</li>
+        <li><strong>Home → Close &amp; Apply</strong> to bring the new date columns back into the model.</li>
+      </ol>
+      <div class="callout rule">
+        <span class="elabel">Rule</span>
+        <p>Some data-shaping tasks are genuinely easier in Power Query than in DAX (and vice versa) — the professor's advice: be comfortable moving between the two rather than forcing everything into DAX.</p>
+      </div>
+
+      <h3>4.2 Problem 2 — one date table, two source tables</h3>
+      <p>The date range now has to span whichever table has the earliest and latest sale, across <em>both</em> fact tables:</p>
+<pre><code>Date =
+ADDCOLUMNS (
+    CALENDAR (
+        DATE (
+            YEAR (
+                MIN ( MIN ( 'Internet Sales'[Order Date] ), MIN ( 'Reseller Sales'[Order Date] ) )
+            ), 1, 1
+        ),
+        DATE (
+            YEAR (
+                MAX ( MAX ( 'Internet Sales'[Order Date] ), MAX ( 'Reseller Sales'[Order Date] ) )
+            ), 12, 31
+        )
+    ),
+    <span class="kw">-- Year / Quarter / Month / Month Number / WeekDay / WeekDay Number columns...</span>
+)</code></pre>
+      <div class="callout rule">
+        <span class="elabel">The nested MIN/MAX pattern</span>
+        <p><code class="inline">MIN</code> and <code class="inline">MAX</code> do double duty: the <em>inner</em> calls (<code class="inline">MIN('Internet Sales'[Order Date])</code>) each scan a whole column for its minimum; the <em>outer</em> call just compares the two resulting scalar values against each other and returns the smaller. Same function, two different jobs, depending on whether its arguments are a column or two already-computed values.</p>
+      </div>
+
+      <h3>4.3 Finishing the date table and wiring it up</h3>
+      <ul>
+        <li>Format the <code class="inline">Date</code> column as <strong>Date</strong> (not Date/Time).</li>
+        <li>Set sort-by columns: <code class="inline">Month</code> sorts by <code class="inline">Month Number</code>, <code class="inline">WeekDay</code> sorts by <code class="inline">WeekDay Number</code> — and hide both numeric helper columns from report view, since end users have no reason to see or slice by them.</li>
+        <li><strong>Mark as date table</strong>.</li>
+        <li>Build the relationships: put the <code class="inline">Date</code> table in the model between the two fact tables, relating its <code class="inline">Date</code> column to each fact table's new <code class="inline">Order Date</code> column.</li>
+      </ul>
+      <div class="callout exercise">
+        <span class="elabel">Building the combined Total Sales measure</span>
+        <p>Create a dedicated <code class="inline">_Measures</code> table, then:</p>
+<pre><code>Sales = SUM ( 'Internet Sales'[Sales Amount] ) + SUM ( 'Reseller Sales'[Sales Amount] )</code></pre>
+        <p>No <code class="inline">SUMX</code> needed here — <code class="inline">Sales Amount</code> is already a stored per-line total (not a unit price needing multiplication), so a plain <code class="inline">SUM</code> of each table is enough; report it in a matrix by Year and Month, confirmed to slice correctly with months in calendar order once the sort-by column is set.</p>
+      </div>
+    </section>
+
+    <section id="s5">
+      <h2><span class="secnum">5</span> Solution walkthrough — Time intelligence exercises <span class="tag tag-demo">demo/exercise</span></h2>
+      <p><code class="inline">1.6.e - solutions of the exercises.srt</code>. Two parts, continuing from the file built in §4.</p>
+
+      <h3>5.1 Part 1 — SPLY, YTD, YTD-last-year, running total</h3>
+<pre><code>Sales SPLY := CALCULATE ( [Sales], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+<span class="kw">-- verified: December 2011 SPLY value = December 2010's actual sales</span>
+
+Sales YTD := CALCULATE ( [Sales], DATESYTD ( 'Date'[Date] ) )
+<span class="kw">-- Jan 2011 = ~$2M; Feb 2011 adds ~$466K on top; keeps accumulating through the year, resets to zero in January of the next year</span>
+
+Sales YTD Last Year := CALCULATE ( [Sales], DATESYTD ( SAMEPERIODLASTYEAR ( 'Date'[Date] ) ) )
+<span class="kw">-- verified: Feb 2012's YTD-Last-Year value = Feb 2011's own YTD value, exactly</span></code></pre>
+<pre><code>Sales RT :=
+VAR LastVisibleDate = MAX ( 'Date'[Date] )
+RETURN
+    CALCULATE (
+        [Sales],
+        FILTER ( ALL ( 'Date' ), 'Date'[Date] &lt;= LastVisibleDate )
+    )</code></pre>
+      <div class="callout exercise">
+        <span class="elabel">Exercise: restrict the running total to "since 2012"</span>
+        <p>Naive approach: add a second filter on each fact table's own <code class="inline">Order Date</code> column being ≥ 2012 — but that means writing (and maintaining) two separate conditions, one per fact table. Simpler: since the shared <code class="inline">Date</code> table already has a single <code class="inline">Year</code> column both fact tables are related through, add <em>one</em> extra condition on that instead.</p>
+<pre><code>Sales RT since 2012 :=
+VAR LastVisibleDate = MAX ( 'Date'[Date] )
+RETURN
+    CALCULATE (
+        [Sales],
+        FILTER ( ALL ( 'Date' ), 'Date'[Date] &lt;= LastVisibleDate ),
+        'Date'[Year] &gt;= 2012
+    )</code></pre>
+        <p>Result: no running total shown before 2012; from 2012 onward it accumulates normally and does not reset to zero at the next year boundary.</p>
+      </div>
+
+      <h3>5.2 Part 2 — Reseller Sales YTD: a measure that "isn't working," except it is</h3>
+      <p>New file, existing <code class="inline">DimDate</code> already related to <code class="inline">FactResellerSales</code> — no new date table needed here, just new measures.</p>
+<pre><code>Reseller Sales := SUM ( FactResellerSales[Sales Amount] )
+Reseller Sales YTD := CALCULATE ( [Reseller Sales], DATESYTD ( DimDate[Full Date Alternate Key] ) )</code></pre>
+      <p><em>(Note: in this dataset the date table's actual date-typed column is named <code class="inline">Full Date Alternate Key</code>, not <code class="inline">Date</code> — its <code class="inline">DateKey</code> column, used as the relationship's key, is a surrogate integer, not a date.)</em></p>
+      <div class="callout exercise">
+        <span class="elabel">Bug: Reseller Sales YTD returns identical numbers to plain Reseller Sales</span>
+        <p>The measure itself is correct — right function, right date column in the filter argument. <strong>Rule of thumb invoked directly</strong>: when a dataset is new to you, check the data model first, before assuming the DAX is wrong.</p>
+        <p><strong>Root cause #1 (partial fix)</strong>: <code class="inline">DimDate ↔ FactResellerSales</code> actually has <em>three</em> relationships (via <code class="inline">DueDateKey</code>, <code class="inline">OrderDateKey</code>, and <code class="inline">ShipDateKey</code>). Power BI had auto-activated <code class="inline">DueDateKey</code> on import — essentially arbitrarily — instead of <code class="inline">OrderDateKey</code>. Deactivating Due Date and activating Order Date changed the numbers slightly, but <code class="inline">Reseller Sales</code> and <code class="inline">Reseller Sales YTD</code> still matched each other exactly. Not the real bug.</p>
+        <p><strong>Root cause #2 (the actual fix)</strong>: <code class="inline">DimDate</code> was never marked as a date table. Its relationship key (<code class="inline">DateKey</code>) is a surrogate integer, not the actual date column (<code class="inline">Full Date Alternate Key</code>) that <code class="inline">DATESYTD</code> is being pointed at. Whenever the relationship's key column isn't itself the date column your time-intelligence function uses, <strong>marking the date table is not optional — it's required</strong> for functions like <code class="inline">DATESYTD</code> to work at all. Marking it fixed the measure immediately, with no code change.</p>
+      </div>
+    </section>
+
+    <section id="s6">
+      <h2><span class="secnum">6</span> Demo &amp; exercise — USERELATIONSHIP <span class="tag tag-demo">demo/exercise</span></h2>
+      <p><code class="inline">1.6.f - USERELATIONSHIP.srt</code>, file: <code class="inline">1.6.f 05b Using multiple dates - USERELATIONSHIP.pbix</code>. Framed explicitly: <strong>USERELATIONSHIP is a filter modifier, not a time-intelligence function</strong> — it doesn't require a date-typed column at all, just the two key columns of an already-defined (but inactive) relationship.</p>
+
+      <h3>6.1 Demo: Sales Amount vs. Delivered Amount</h3>
+<pre><code>Sales Amount := SUMX ( Sales, Sales[Quantity] * Sales[Net Price] )   <span class="kw">-- sliced by whichever Date relationship is active (here: Order Date)</span>
+
+Delivered Amount :=
+CALCULATE (
+    [Sales Amount],
+    USERELATIONSHIP ( 'Date'[Date], Sales[Delivery Date] )
+)</code></pre>
+      <div class="callout rule">
+        <span class="elabel">Rule</span>
+        <p><code class="inline">USERELATIONSHIP</code> only works if the relationship it names already exists in the model as an <strong>inactive</strong> relationship — it cannot create a relationship on the fly. Here, <code class="inline">Date ↔ Sales[Delivery Date]</code> must already be defined (dashed line) for this to work at all.</p>
+      </div>
+      <p><code class="inline">Sales Amount</code> doesn't reference the relationship directly in its own code, but it's still sliced by whichever relationship is <em>active</em> at query time (Order Date, by default here). <code class="inline">Delivered Amount</code> temporarily swaps which relationship is active for just that one calculation — same underlying Sales rows, sliced by a different date field.</p>
+
+      <h3>6.2 Exercise: total sales + total shipped sales, across two fact tables</h3>
+      <p>Task: build <code class="inline">Total Sales Amount</code> (Internet + Reseller) and <code class="inline">Total Shipped Sales Amount</code> (same total, but sliced by ship date instead of order date) — with a hint that this needs <em>two</em> relationship modifiers, one per fact table, since both fact tables independently relate to <code class="inline">Date</code>.</p>
+<pre><code>Total Sales Amount := SUM ( 'Internet Sales'[Sales Amount] ) + SUM ( 'Reseller Sales'[Sales Amount] )
+
+Total Shipped Sales Amount :=
+CALCULATE (
+    [Total Sales Amount],
+    USERELATIONSHIP ( 'Internet Sales'[ShipDateKey], 'Date'[DateKey] ),
+    USERELATIONSHIP ( 'Reseller Sales'[ShipDateKey], 'Date'[DateKey] )
+)</code></pre>
+      <div class="callout rule">
+        <span class="elabel">Rule</span>
+        <p><code class="inline">CALCULATE</code> accepts multiple filter arguments/modifiers at once, comma-separated — nothing stops you from activating two different relationships (on two different fact tables) inside the same <code class="inline">CALCULATE</code> call.</p>
+      </div>
+      <p>Prerequisite cleanup performed first (same pattern as §5): each fact table actually had <em>three</em> possible date relationships (order/due/ship), so the default active one had to be checked and, where necessary, switched to Order Date for <code class="inline">Total Sales Amount</code> to mean what it's supposed to mean; and <code class="inline">DimDate</code> had to be (re-)marked as a date table.</p>
+      <div class="callout exercise">
+        <span class="elabel">Sanity check on the result</span>
+        <p>December 2010 shows Sales but zero Shipped Sales (those orders ship in 2011 — orders precede shipments, so this is expected, not a bug). Symmetrically, January 2014's orders are the last ones in the dataset, but February 2014 shows meaningful shipped-sales activity — fulfillment of that January backlog. A story that makes business sense is itself a form of validation for a USERELATIONSHIP-based measure.</p>
+      </div>
+    </section>
+
+    <section id="s7">
+      <h2><span class="secnum">7</span> Example DAX code — consolidated reference</h2>
+<pre><code><span class="kw">-- Explicit date table anchored to real transaction dates, spanning two fact tables</span>
+Date =
+ADDCOLUMNS (
+    CALENDAR (
+        DATE ( YEAR ( MIN ( MIN ( 'Internet Sales'[Order Date] ), MIN ( 'Reseller Sales'[Order Date] ) ) ), 1, 1 ),
+        DATE ( YEAR ( MAX ( MAX ( 'Internet Sales'[Order Date] ), MAX ( 'Reseller Sales'[Order Date] ) ) ), 12, 31 )
+    ),
+    "Year", YEAR ( [Date] ),
+    "Month", FORMAT ( [Date], "mmmm" ),
+    "Month Number", MONTH ( [Date] ),
+    "WeekDay", FORMAT ( [Date], "dddd" ),
+    "WeekDay Number", WEEKDAY ( [Date] )
+)
+
+<span class="kw">-- Converting a YYYYMMDD integer key to a real date (in Power Query, not DAX)</span>
+<span class="kw">-- 1. Transform → change type to Text</span>
+<span class="kw">-- 2. Add Column → Custom Column:</span>
+Order Date = Date.FromText ( [OrderDateKey] )
+<span class="kw">-- 3. explicitly set the new column's type to Date</span>
+
+<span class="kw">-- Year-to-date, same period last year, and combined</span>
+Sales SPLY         := CALCULATE ( [Sales], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+Sales YTD          := CALCULATE ( [Sales], DATESYTD ( 'Date'[Date] ) )
+Sales YTD Last Year := CALCULATE ( [Sales], DATESYTD ( SAMEPERIODLASTYEAR ( 'Date'[Date] ) ) )
+
+<span class="kw">-- Running total, with and without a start-year floor</span>
+Sales RT :=
+VAR LastVisibleDate = MAX ( 'Date'[Date] )
+RETURN
+    CALCULATE ( [Sales], FILTER ( ALL ( 'Date' ), 'Date'[Date] &lt;= LastVisibleDate ) )
+
+Sales RT since 2012 :=
+VAR LastVisibleDate = MAX ( 'Date'[Date] )
+RETURN
+    CALCULATE (
+        [Sales],
+        FILTER ( ALL ( 'Date' ), 'Date'[Date] &lt;= LastVisibleDate ),
+        'Date'[Year] &gt;= 2012
+    )
+
+<span class="kw">-- USERELATIONSHIP: activate an inactive relationship for one calculation</span>
+Delivered Amount :=
+CALCULATE ( [Sales Amount], USERELATIONSHIP ( 'Date'[Date], Sales[Delivery Date] ) )
+
+<span class="kw">-- USERELATIONSHIP with two modifiers at once, across two fact tables</span>
+Total Shipped Sales Amount :=
+CALCULATE (
+    [Total Sales Amount],
+    USERELATIONSHIP ( 'Internet Sales'[ShipDateKey], 'Date'[DateKey] ),
+    USERELATIONSHIP ( 'Reseller Sales'[ShipDateKey], 'Date'[DateKey] )
+)</code></pre>
+    </section>
+
+    <section id="s8">
+      <h2><span class="secnum">8</span> Key takeaways / self-check</h2>
+      <ul>
+        <li>Explain why <code class="inline">CALENDARAUTO()</code> can silently produce a date table that's far larger than expected — and why a fix that works needs to know <em>which specific column</em> to anchor to, not just "any date in the model."</li>
+        <li>Restate, from memory, the nested <code class="inline">MIN(MIN(...), MIN(...))</code> pattern for finding the earliest date across two fact tables — and explain the difference between the inner and outer calls.</li>
+        <li>Can you convert a <code class="inline">YYYYMMDD</code>-style whole-number key into a real date column using Power Query, without looking it up?</li>
+        <li>State precisely <em>when</em> marking a date table stops being "just good practice" and becomes required for a time-intelligence function to work at all.</li>
+        <li>When a time-intelligence measure "isn't working," can you name the two most likely non-DAX causes before you start rewriting the formula? (Wrong active relationship among several candidates; date table not marked.)</li>
+        <li>Explain why a running-total measure never resets at a year boundary unless you deliberately add a lower-bound filter — in terms of what CALCULATE's filter arguments do to the existing context.</li>
+        <li>Can you state the one-sentence difference between a time-intelligence function (like <code class="inline">DATESYTD</code>, which needs an actual date column) and <code class="inline">USERELATIONSHIP</code> (which needs only the two key columns of an existing relationship, date-typed or not)?</li>
+      </ul>
+    </section>
+
+    <footer>Built from the M1.6 slide deck and all five demo/exercise transcripts — check it against your own .pbix files rather than memorizing it as-is.</footer>
+  </main>
+</div>
+
+<script>
+  (function(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+    var sections = links.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+    if(!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var idx = sections.indexOf(entry.target);
+        if(idx === -1) return;
+        if(entry.isIntersecting){
+          links.forEach(function(l){ l.classList.remove('active'); });
+          links[idx].classList.add('active');
+        }
+      });
+    }, { rootMargin: '-10% 0px -75% 0px', threshold: 0 });
+    sections.forEach(function(s){ io.observe(s); });
+  })();
+</script>
