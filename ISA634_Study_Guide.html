@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ISA 634 Study Guide</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --muted:#555; --rule:#c9c9c9; --accent:#a3122a;
+    --def-bg:#f3f6fb; --def-bd:#3b5b8c;
+    --warn-bg:#fff5e6; --warn-bd:#c77700;
+    --ex-bg:#f4f9f1; --ex-bd:#3d7a2a;
+    --chk-bg:#f7f3fa; --chk-bd:#6b4a8c;
+    --page:#fff;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{margin:0;background:#eceff3;color:var(--ink);
+       font:16px/1.5 Georgia,"Times New Roman",serif}
+  .sheet{max-width:820px;margin:0 auto;background:var(--page);padding:32px 44px 56px}
+  .toolbar{position:sticky;top:0;z-index:5;background:#20232a;color:#fff;
+       padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;
+       font:14px system-ui,Segoe UI,sans-serif}
+  .toolbar button{background:#fff;color:#20232a;border:0;border-radius:4px;padding:6px 12px;
+       font:600 13px system-ui,sans-serif;cursor:pointer}
+  .toolbar label{display:flex;gap:6px;align-items:center;cursor:pointer}
+  h1,h2,h3,h4{font-family:system-ui,Segoe UI,Helvetica,Arial,sans-serif;line-height:1.25}
+  h1.title{font-size:30px;margin:0 0 4px;color:var(--accent)}
+  .subtitle{color:var(--muted);margin:0 0 20px;font-family:system-ui,sans-serif;font-size:14px}
+  h1.chapter{font-size:24px;color:var(--accent);border-bottom:3px solid var(--accent);
+       padding-bottom:6px;margin:40px 0 4px}
+  .source{font:12.5px system-ui,sans-serif;color:var(--muted);margin:0 0 16px}
+  h2{font-size:18px;margin:26px 0 6px;border-bottom:1px solid var(--rule);padding-bottom:3px}
+  h3{font-size:15.5px;margin:18px 0 4px}
+  p{margin:6px 0 8px}
+  ul,ol{margin:4px 0 10px;padding-left:24px}
+  li{margin:2px 0}
+  code,.mono{font-family:Consolas,"Courier New",monospace;font-size:.92em}
+  var{font-style:italic}
+  .toc{columns:2;font:14.5px system-ui,sans-serif;padding-left:20px}
+  .toc li{margin:3px 0}
+  .box{border:1px solid;border-left-width:5px;border-radius:4px;padding:8px 12px;margin:12px 0;
+       break-inside:avoid;page-break-inside:avoid}
+  .box>.label{display:block;font:700 11.5px system-ui,sans-serif;letter-spacing:.06em;
+       text-transform:uppercase;margin-bottom:3px}
+  .def{background:var(--def-bg);border-color:var(--def-bd)} .def>.label{color:var(--def-bd)}
+  .warn{background:var(--warn-bg);border-color:var(--warn-bd)} .warn>.label{color:var(--warn-bd)}
+  .ex{background:var(--ex-bg);border-color:var(--ex-bd)} .ex>.label{color:var(--ex-bd)}
+  .chk{background:var(--chk-bg);border-color:var(--chk-bd)} .chk>.label{color:var(--chk-bd)}
+  .box p:last-child,.box ul:last-child,.box ol:last-child{margin-bottom:0}
+  .formula{text-align:center;margin:8px 0;font-size:1.05em}
+  table{border-collapse:collapse;margin:8px 0 12px;font:14px system-ui,sans-serif;
+        break-inside:avoid;page-break-inside:avoid}
+  th,td{border:1px solid #b5b5b5;padding:4px 10px;text-align:left;vertical-align:top}
+  th{background:#eef0f3}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  table.mat td{text-align:center;padding:2px 10px}
+  .answer{margin:4px 0 0;padding:4px 8px;border-left:3px solid var(--chk-bd);background:#fff;
+          font-size:.96em}
+  .answer::before{content:"Answer: ";font-weight:700;font-family:system-ui,sans-serif;
+                  font-size:12px;color:var(--chk-bd)}
+  body.hide-answers .answer{display:none}
+  .chk ol>li{margin-bottom:8px}
+  figure{margin:10px 0;text-align:center;break-inside:avoid;page-break-inside:avoid}
+  figcaption{font:12.5px system-ui,sans-serif;color:var(--muted);margin-top:2px}
+  svg text{font-family:system-ui,Arial,sans-serif}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+  .two>*{min-width:0}
+  .blankslide{font:13px system-ui,sans-serif;color:var(--muted);font-style:italic}
+  .note{font:13px system-ui,sans-serif;color:var(--muted)}
+
+  @media (max-width:640px){
+    .sheet{padding:20px 16px 40px} .toc{columns:1} .two{grid-template-columns:1fr}
+  }
+  @page{size:Letter;margin:0.6in 0.65in}
+  @media print{
+    body{background:#fff;font-size:10pt;line-height:1.34}
+    .sheet{max-width:none;padding:0;margin:0}
+    .toolbar{display:none}
+    h1.chapter{margin:22px 0 4px;font-size:18pt;break-after:avoid;page-break-after:avoid}
+    h1.chapter.first{margin-top:0}
+    h1.chapter.newpage{break-before:page;page-break-before:always;margin-top:0}
+    .source{break-after:avoid;page-break-after:avoid}
+    h2{font-size:12.5pt;margin:16px 0 5px;break-after:avoid;page-break-after:avoid}
+    h3{break-after:avoid;page-break-after:avoid}
+    .box{margin:9px 0;padding:6px 10px}
+    .cover{break-after:page;page-break-after:always}
+    a{color:inherit;text-decoration:none}
+    .toc{font-size:10.5pt}
+    svg{max-width:100%;height:auto}
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <strong>ISA 634 Study Guide</strong>
+  <button onclick="window.print()">Print / Save as PDF</button>
+  <label><input type="checkbox" id="ans" checked> Show answers to self-checks</label>
+  <span style="opacity:.7">Tip: untick to print a blank practice copy</span>
+</div>
+
+<div class="sheet">
+
+<!-- ============================ COVER / TOC ============================ -->
+<section class="cover">
+  <h1 class="title">ISA 634: Systems Modeling &amp; Optimization</h1>
+  <p class="subtitle">Study guide &middot; Fall 2026 &middot; Prof. Maciej Rysz &middot; Farmer School of Business, Miami University<br>
+  Covers: Handout 0, Complexity &amp; Algorithm Analysis, Handouts 01 (1 &amp; 2), 02, 03</p>
+
+  <h2>Contents</h2>
+  <ol class="toc">
+    <li><a href="#c1">Introduction &amp; the three kinds of analytics</a></li>
+    <li><a href="#c2">Complexity &amp; algorithm analysis</a></li>
+    <li><a href="#c3">Mathematical programming basics</a></li>
+    <li><a href="#c4">Unconstrained optimization: gradient descent &amp; SGD; the fencing problem</a></li>
+    <li><a href="#c5">Linear programs: general, standard &amp; matrix form</a></li>
+    <li><a href="#c6">LP models: Diet &amp; Wyndor Glass; LP assumptions</a></li>
+    <li><a href="#c7">The graphical solution method</a></li>
+    <li><a href="#c8">One-page cheat sheet</a></li>
+  </ol>
+
+  <div class="box warn">
+    <span class="label">How this guide was built</span>
+    <p>Built from the lecture PDFs. Your instructor leaves parts of the slides blank on purpose
+    (the 1-D/2-D gradient-descent examples, the fencing model, the graphical-method figures, the
+    &ldquo;key observations&rdquo; slide). Where a slide was blank I filled in the standard result and marked it
+    <em>(standard result, check against your handwritten notes)</em>. The syllabus says the exams need handwriting, so
+    use this to check your notes, not replace them. Solved examples that come from class are labelled with their source slide.</p>
+  </div>
+  <div class="box def">
+    <span class="label">Grading context</span>
+    <p>Exams/quizzes 75% &middot; Project 15% &middot; Assignments 10%. Late submissions get a zero.</p>
+  </div>
+</section>
+
+<!-- ============================ CH 1 ============================ -->
+<h1 class="chapter first" id="c1">1. Introduction &amp; the three kinds of analytics</h1>
+<p class="source">Source: Handout 0 &mdash; Introduction to Modeling</p>
+
+<h2>Management science / operations research (OR/MS)</h2>
+<ul>
+  <li>Interdisciplinary study of <strong>problem solving and decision making</strong> in organizations, using mathematical
+      modeling, statistics and numerical algorithms to reach optimal or near-optimal decisions. &ldquo;Management science&rdquo; and &ldquo;operations research&rdquo; are used interchangeably.</li>
+  <li>First used by the military in <strong>WWII</strong> to allocate scarce resources; moved into business, industry and government by the early 1950s.</li>
+  <li>What sparked its growth: <strong>better theory</strong> (e.g., the simplex method) and <strong>computers</strong> (making large problems tractable, sometimes).</li>
+  <li>Solver software: Excel, LINDO, CPLEX, GUROBI, Matlab, R and others. This course uses Excel, Gurobi and R.</li>
+</ul>
+
+<h2>Descriptive vs. predictive vs. prescriptive</h2>
+<table>
+  <tr><th>Type</th><th>What it does</th><th>Typical tools</th></tr>
+  <tr><td><strong>Descriptive</strong></td><td>What happened / is happening? Visualization-heavy, a.k.a. business intelligence (BI).</td><td>Dashboards, monitoring</td></tr>
+  <tr><td><strong>Predictive</strong></td><td>What will happen? Forecasts future performance.</td><td>Statistical and machine-learning models</td></tr>
+  <tr><td><strong>Prescriptive</strong></td><td>What <em>should</em> we do? Recommends decisions.</td><td>Mathematical and simulation-based models (optimization)</td></tr>
+</table>
+<p><strong>This course is prescriptive analytics</strong>, the main focus of OR/MS. Running example in the slides: a wastewater plant.
+Sensors monitoring it are <em>descriptive</em>; a model of the aeration process is <em>predictive</em>; optimizing the aeration settings is <em>prescriptive</em>.</p>
+
+<h2>Building blocks of any prescriptive model</h2>
+<ol>
+  <li><strong>Decisions</strong> (what we control).</li>
+  <li><strong>Constraints</strong> on how decisions can be made (if any).</li>
+  <li>A <strong>performance measure</strong> that scores a decision; this defines the <strong>objective function</strong>.</li>
+  <li>Goal: find an <strong>optimal</strong> solution, i.e., <strong>maximize or minimize</strong> the objective function.</li>
+</ol>
+<div class="box def"><span class="label">Questions prescriptive analytics asks</span>
+  <p>Is there only one solution? What is a &ldquo;good&rdquo; or &ldquo;best&rdquo; one, <em>with respect to what</em> (the performance measure)? Are there constraints on the decisions?</p>
+</div>
+<p>Applications shown: supply chain management, advancing cancer therapeutics, scheduling softball in Ohio, portfolio optimization.</p>
+
+<div class="box chk"><span class="label">Self-check</span>
+<ol>
+  <li>Classify: (a) a dashboard of last quarter's sales; (b) a model forecasting next quarter's sales; (c) a model choosing how many units to produce.
+    <div class="answer">(a) descriptive, (b) predictive, (c) prescriptive.</div></li>
+  <li>Name the four building blocks of an optimization problem.
+    <div class="answer">Decisions, constraints, performance measure (objective function), and finding the best (optimal) solution.</div></li>
+  <li>Give a daily activity you could frame as an optimization problem, with its decisions, constraints and objective.
+    <div class="answer">Example: choosing a route to class. Decision: which path. Constraint: must arrive by 10:05. Objective: minimize walking time. (Any consistent example works.)</div></li>
+</ol></div>
+
+<!-- ============================ CH 2 ============================ -->
+<h1 class="chapter" id="c2">2. Complexity &amp; algorithm analysis</h1>
+<p class="source">Source: Complexity and Algorithm Analysis slides &middot; Assignment 1, Q1</p>
+
+<h2>Why it matters</h2>
+<ul>
+  <li>Complex systems have many interconnected parts; complexity becomes quantifiable once a measure for component relationships is chosen.</li>
+  <li>For a problem on a network (subgraph detection, paths, centrality, &hellip;) we ask whether our algorithm can solve it in reasonable time.</li>
+  <li><strong>Intractable</strong> problem &rarr; no optimal solution in reasonable time &rarr; use an <strong>approximation</strong> or <strong>heuristic</strong> algorithm. <strong>Tractable</strong> &rarr; an efficient optimal algorithm exists; find the fastest one.</li>
+  <li>Goals of complexity analysis: quantify problem difficulty, compare problem classes, define &ldquo;efficient&rdquo;, compare algorithms for the same problem.</li>
+</ul>
+
+<h2>Measuring running time</h2>
+<ul>
+  <li>Wall-clock time depends on the computer, so we count <strong>primitive operations</strong> as a function of input size (<var>n</var>, <var>m</var>, e.g., nodes and arcs). This is platform-independent.</li>
+  <li>Best case gives no guarantee; average case needs probabilities; <strong>worst case</strong> gives a guarantee and is easiest to analyze &mdash; we use it.</li>
+  <li>Model of computation: sequential machine; <strong>infinite memory</strong>; each simple instruction (arithmetic, comparison, assignment, load/store/copy, subroutine call/return) takes <strong>1 step</strong>; ignore constants.</li>
+</ul>
+
+<div class="box def"><span class="label">Big-O</span>
+  <p><var>O</var>(&middot;) is the <strong>worst-case</strong> running time of an algorithm. Keep the dominant term, drop constants:</p>
+  <ul>
+    <li><var>am</var> + <var>bn</var> operations &rarr; <var>O</var>(<var>m</var>+<var>n</var>)</li>
+    <li>3<var>mn</var> + <var>m</var> operations &rarr; <var>O</var>(<var>mn</var>)</li>
+    <li><var>kn</var><sup>3</sup> + <var>m</var> operations &rarr; <var>O</var>(<var>n</var><sup>3</sup>) as written on the slide (strictly <var>O</var>(<var>n</var><sup>3</sup>+<var>m</var>) if <var>m</var> is independent of <var>n</var>)</li>
+  </ul>
+  <p><strong>Polynomial</strong> <var>O</var>(<var>n</var><sup><var>c</var></sup>) = &ldquo;good&rdquo;/efficient. <strong>Exponential</strong> <var>O</var>(2<sup><var>n</var></sup>) = &ldquo;bad&rdquo;. <strong>Brute force</strong> (check every solution) is typically 2<sup><var>n</var></sup> or worse: unacceptable in practice.</p>
+</div>
+
+<h3>Worked loops</h3>
+<div class="two">
+<div class="box ex"><span class="label">Matrix addition (slide)</span>
+<pre class="mono" style="margin:2px 0">for i = 1 to m
+  for j = 1 to n
+    c[i,j] = a[i,j] + b[i,j]</pre>
+<p><var>m</var>&middot;<var>n</var> additions &rarr; <strong><var>O</var>(<var>mn</var>)</strong>.</p></div>
+<div class="box ex"><span class="label">Assignment 1, Q1 (you got this right)</span>
+<pre class="mono" style="margin:2px 0">for i = 1 to n
+  for j = 1 to m
+    for k = 1 to p
+      a[i,j,k] = b[i,j,k] + c[i,j]</pre>
+<p>Three nested loops with independent bounds &rarr; <strong><var>O</var>(<var>nmp</var>)</strong>.</p></div>
+</div>
+<div class="box warn"><span class="label">Watch out</span>
+<p>Nested loops multiply only their <em>own</em> bounds. Do not answer <var>n</var><sup>3</sup> unless all three bounds are <var>n</var>.</p></div>
+
+<h2>Standard examples from the slides</h2>
+<table>
+  <tr><th>Class</th><th>Example problem</th><th>Idea</th></tr>
+  <tr><td><var>O</var>(<var>n</var>) linear</td><td>Find the maximum of <var>a</var><sub>1</sub>&hellip;<var>a</var><sub><var>n</var></sub></td><td>One pass</td></tr>
+  <tr><td><var>O</var>(<var>n</var><sup>2</sup>) quadratic</td><td>Closest pair among <var>n</var> points in the plane</td><td>Try all pairs</td></tr>
+  <tr><td><var>O</var>(<var>n</var><sup><var>c</var></sup>) polynomial</td><td>Independent set of exactly <var>c</var> nodes (<var>c</var> a fixed constant)</td><td>Enumerate all subsets of size <var>c</var></td></tr>
+  <tr><td>Exponential</td><td>Maximum independent set</td><td>Enumerate all subsets: <var>O</var>(<var>n</var><sup>2</sup>2<sup><var>n</var></sup>)</td></tr>
+  <tr><td><var>O</var>(|<var>V</var>|+|<var>E</var>|)</td><td>Breadth-first &amp; depth-first search</td><td>Each vertex once, each edge once (twice if undirected)</td></tr>
+</table>
+
+<h2>Basic graph algorithms</h2>
+<ul>
+  <li><strong>BFS</strong>: explore nodes in order of &ldquo;distance&rdquo; from the source <var>s</var>, using a queue. Every vertex is enqueued at most once (<var>O</var>(|<var>V</var>|)); an edge is examined only when its tail is dequeued, so at most once if directed, twice if undirected (<var>O</var>(|<var>E</var>|)). Total <strong><var>O</var>(|<var>V</var>|+|<var>E</var>|)</strong>.</li>
+  <li><strong>DFS</strong>: go as far as possible from each newly discovered node, then backtrack (BFS instead queues nodes to explore later). Each node visited once, each edge crossed once: <strong><var>O</var>(|<var>V</var>|+|<var>E</var>|)</strong>.</li>
+</ul>
+
+<h2>Problem classes: P, NP, NP-complete</h2>
+<div class="two">
+<div>
+<ul>
+  <li><strong>P</strong>: solvable in polynomial time.</li>
+  <li><strong>NP</strong>: a proposed solution can be <em>verified</em> in polynomial time.</li>
+  <li><strong>NPC (NP-complete)</strong>: the &ldquo;hard&rdquo; problems in NP; believed not solvable in polynomial time.</li>
+  <li>To show a problem is NPC, <strong>transform</strong> a known NPC problem into it. If any NPC problem were solved in polynomial time, all would be.</li>
+  <li>Open question: <strong>does P = NP?</strong></li>
+</ul>
+</div>
+<figure><svg viewBox="0 0 270 170" width="270" role="img" aria-label="P and NP-complete inside NP" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="135" cy="85" rx="128" ry="78" fill="#f2f2f2" stroke="#444" stroke-width="1.6"/>
+<text x="135" y="20" text-anchor="middle" font-size="13" font-weight="700" fill="#222">NP</text>
+<ellipse cx="80" cy="98" rx="52" ry="40" fill="#cfe3c8" stroke="#3d7a2a" stroke-width="1.6"/>
+<text x="80" y="102" text-anchor="middle" font-size="13" font-weight="700" fill="#245216">P</text>
+<ellipse cx="192" cy="98" rx="52" ry="40" fill="#f3d0d0" stroke="#a3122a" stroke-width="1.6"/>
+<text x="192" y="94" text-anchor="middle" font-size="12" font-weight="700" fill="#7a0e1f">NP-complete</text>
+<text x="192" y="110" text-anchor="middle" font-size="10.5" fill="#7a0e1f">(believed hard)</text>
+</svg><figcaption>Hierarchy (assuming P &ne; NP)</figcaption></figure>
+</div>
+
+<div class="box chk"><span class="label">Self-check</span>
+<ol>
+  <li>Why do we analyze the <em>worst</em> case rather than best or average?
+    <div class="answer">Worst case gives a guarantee and is easier to analyze; best case says nothing about difficulty and average case depends on assumed probabilities.</div></li>
+  <li>Simplify: (a) 5<var>m</var> + 2<var>n</var> + 7; (b) 4<var>n</var><sup>3</sup> + 100<var>n</var><sup>2</sup>; (c) two nested loops over <var>n</var> nodes followed by one loop over <var>m</var> edges.
+    <div class="answer">(a) <var>O</var>(<var>m</var>+<var>n</var>); (b) <var>O</var>(<var>n</var><sup>3</sup>); (c) <var>O</var>(<var>n</var><sup>2</sup>+<var>m</var>).</div></li>
+  <li>What is the running time of BFS and what makes up each term?
+    <div class="answer"><var>O</var>(|<var>V</var>|+|<var>E</var>|): |<var>V</var>| for enqueuing each vertex once, |<var>E</var>| for examining each edge at most once (twice if undirected).</div></li>
+  <li>True/false: any problem in NP is not solvable in polynomial time.
+    <div class="answer">False. P is inside NP, so some NP problems <em>are</em> polynomial. Only the NP-complete ones are believed not to be.</div></li>
+  <li>Is an <var>O</var>(2<sup><var>n</var></sup>) algorithm considered efficient?
+    <div class="answer">No. Efficient means polynomial; exponential is the &ldquo;bad&rdquo; case.</div></li>
+</ol></div>
+
+<!-- ============================ CH 3 ============================ -->
+<h1 class="chapter" id="c3">3. Mathematical programming basics</h1>
+<p class="source">Source: Handout 01 (1 of 2) &middot; Assignment 3, Part I review questions</p>
+
+<h2>Three ways to solve an optimization model</h2>
+<table>
+  <tr><th>Option</th><th>How</th><th>Restriction</th><th>Example</th></tr>
+  <tr><td><strong>Enumerate</strong></td><td>Compute all possible solutions, pick the best</td><td>Only possible for integer problems (finite set)</td><td>Manufacturing cars</td></tr>
+  <tr><td><strong>Graphically</strong></td><td>Graph the feasible region, evaluate corner points</td><td>LP with two decision variables</td><td>Some two-variable problems</td></tr>
+  <tr><td><strong>Software</strong></td><td>Translate the model into a solver</td><td>Limits of the tool (Excel cannot handle large IPs)</td><td>Almost any real problem</td></tr>
+</table>
+
+<h2>The general optimization model</h2>
+<div class="formula"><em>max</em> <var>f</var>(<var>x</var><sub>1</sub>,&hellip;,<var>x</var><sub><var>n</var></sub>) &nbsp; s.t. &nbsp; <var>g</var><sub><var>i</var></sub>(<var>x</var><sub>1</sub>,&hellip;,<var>x</var><sub><var>n</var></sub>) &nbsp;(&le;, = or &ge;)&nbsp; 0, &nbsp; <var>i</var> = 1,&hellip;,<var>m</var></div>
+<ul>
+  <li><strong>Objective function</strong> <var>f</var>: has a <em>sense</em> (min or max); the optimal <em>value</em> is unique but the optimal <em>solution</em> may not be.</li>
+  <li><strong>Naming</strong>: use subscripts &mdash; <var>x</var><sub><var>i</var></sub> (single) or <var>x</var><sub><var>ij</var></sub> (double).</li>
+  <li><strong>Unconstrained</strong> = no constraints; <strong>constrained</strong> = at least one.</li>
+  <li><strong>Variable types</strong>: continuous, integer, binary (0 or 1), free (any value), non-positive, non-negative.</li>
+  <li>Constraint types are &le;, &ge;, =. <strong>Strict</strong> &lt; or &gt; are avoided because we might not obtain a min or max (e.g., min <var>x</var> s.t. <var>x</var> &gt; 0 has no minimum).</li>
+  <li><strong>Min &harr; max</strong>: max <var>f</var>(<var>x</var>) is the same as &minus;min(&minus;<var>f</var>(<var>x</var>)); min <var>f</var>(<var>x</var>) is the same as &minus;max(&minus;<var>f</var>(<var>x</var>)).</li>
+  <li>The <strong>types of <var>f</var> and <var>g</var><sub><var>i</var></sub></strong> (linear, nonlinear, piecewise linear, convex, nonconvex) determine the type of problem and its difficulty.</li>
+</ul>
+
+<div class="box def"><span class="label">Vocabulary (from Assignment 3 review)</span>
+<ul>
+  <li><strong>Model</strong>: captures <em>some but not all</em> characteristics of the real decision (true).</li>
+  <li><strong>Objective function</strong>: evaluates the quality/value of a solution.</li>
+  <li><strong>Constraint</strong>: a limitation on how decisions can be made.</li>
+  <li><strong>Decision variable</strong>: what we choose. Continuous e.g. gallons of paint; integer e.g. number of trucks; binary e.g. open a warehouse (1) or not (0).</li>
+</ul></div>
+
+<div class="box chk"><span class="label">Self-check</span>
+<ol>
+  <li>Rewrite &ldquo;min 3<var>x</var><sub>1</sub> &minus; <var>x</var><sub>2</sub>&rdquo; as a max problem. How do you recover the original value?
+    <div class="answer">max &minus;3<var>x</var><sub>1</sub> + <var>x</var><sub>2</sub>. Original optimal value = &minus;(max value).</div></li>
+  <li>Why can&rsquo;t we use &lt; or &gt; in constraints?
+    <div class="answer">The optimum may not exist (the feasible set has no boundary point to attain), so a minimum or maximum might not be obtained.</div></li>
+  <li>Which solution approach only works if the set of solutions is finite?
+    <div class="answer">Enumeration (integer problems).</div></li>
+</ol></div>
+
+<!-- ============================ CH 4 ============================ -->
+<h1 class="chapter" id="c4">4. Unconstrained optimization &amp; the fencing problem</h1>
+<p class="source">Source: Handout 01 (2 of 2) &middot; Assignment 1, Q2&ndash;Q3</p>
+
+<h2>Unconstrained optimization</h2>
+<p>Find a min or max with <strong>no constraints</strong>; variables take any value. In calculus you did this by setting the derivative to zero. Other methods:</p>
+<ul>
+  <li><strong>Derivative-free</strong>: dichotomous search, Fibonacci search, golden-section search.</li>
+  <li><strong>Derivative-based</strong>: <strong>gradient descent</strong>, Newton&rsquo;s method.</li>
+</ul>
+
+<h2>Gradient descent (GD)</h2>
+<div class="box def"><span class="label">Idea</span>
+<p>An iterative algorithm to minimize a differentiable function by stepping in the direction where it decreases fastest. The <strong>gradient</strong> &nabla;<var>f</var> points where <var>f</var> increases fastest (in 1-D, just the derivative), so we move along the <strong>negative gradient</strong>.</p>
+<ol>
+  <li>Start at some initial point.</li>
+  <li>Compute the gradient there.</li>
+  <li>Step opposite the gradient: <strong><var>x</var> &larr; <var>x</var> &minus; &eta;&nbsp;&nabla;<var>f</var>(<var>x</var>)</strong>.</li>
+  <li>Repeat until the function stops decreasing significantly.</li>
+</ol>
+<p>&eta; is the <strong>learning rate</strong> (step size).</p></div>
+
+<div class="box ex"><span class="label">Worked example: <var>f</var>(<var>x</var>,<var>y</var>) = <var>x</var><sup>2</sup> + 2<var>y</var><sup>2</sup> (Assignment 1, Q2)</span>
+<p>&nabla;<var>f</var> = (2<var>x</var>, 4<var>y</var>). The quiz gave the state after iteration 3, (1.536, 0.432). These values are reproduced exactly by &eta; = 0.1 from a start of (3, 2), so each step multiplies <var>x</var> by 1 &minus; 2(0.1) = 0.8 and <var>y</var> by 1 &minus; 4(0.1) = 0.6. <span class="note">(Start point and &eta; are inferred from the quiz numbers; the class slide itself was blank.)</span></p>
+<table>
+  <tr><th>Iter.</th><th class="num"><var>x</var></th><th class="num"><var>y</var></th><th class="num"><var>f</var>(<var>x</var>,<var>y</var>)</th></tr>
+  <tr><td>0</td><td class="num">3</td><td class="num">2</td><td class="num">17</td></tr>
+  <tr><td>1</td><td class="num">2.4</td><td class="num">1.2</td><td class="num">8.64</td></tr>
+  <tr><td>2</td><td class="num">1.92</td><td class="num">0.72</td><td class="num">4.7232</td></tr>
+  <tr><td>3</td><td class="num">1.536</td><td class="num">0.432</td><td class="num">2.732544</td></tr>
+  <tr><td><strong>4</strong></td><td class="num"><strong>1.2288</strong></td><td class="num"><strong>0.2592</strong></td><td class="num"><strong>1.64431872</strong></td></tr>
+</table>
+<p>Answer to the quiz: <strong><var>x</var> = 1.23, <var>y</var> = 0.26, <var>f</var> = 1.64</strong>. The quiz said not to round <var>x</var> and <var>y</var> before computing <var>f</var>: using 1.23 and 0.26 gives 1.648, which still rounds to 1.65, not 1.64. That is why you have to use the unrounded 1.2288 and 0.2592.</p></div>
+
+<div class="box warn"><span class="label">Watch out (where the points were lost)</span>
+<p>You entered <var>f</var> = 2.03 on Q2. That does not match the new (<var>x</var>,<var>y</var>); always <em>recompute <var>f</var> at the updated point</em>, don&rsquo;t reuse the old <var>f</var> or a value from an earlier row. Sanity check: <var>f</var> must be smaller than the previous iteration&rsquo;s (2.73) when the step size is small enough.</p></div>
+
+<h3>GD on a loss function (Assignment 1, Q3)</h3>
+<p>Fitting a line <var>y</var> &asymp; <var>wx</var> + <var>b</var> minimizes the mean squared error:</p>
+<div class="formula">&#8466;(<var>w</var>,<var>b</var>) = <sup>1</sup>&frasl;<sub><var>n</var></sub> &sum;<sub><var>i</var>=1</sub><sup><var>n</var></sup> ( <var>y</var><sub><var>i</var></sub> &minus; (<var>wx</var><sub><var>i</var></sub> + <var>b</var>) )<sup>2</sup></div>
+<div class="formula">&part;&#8466;/&part;<var>w</var> = &minus;<sup>2</sup>&frasl;<sub><var>n</var></sub> &sum; <var>x</var><sub><var>i</var></sub>(<var>y</var><sub><var>i</var></sub> &minus; (<var>wx</var><sub><var>i</var></sub>+<var>b</var>)) &nbsp;&nbsp; &part;&#8466;/&part;<var>b</var> = &minus;<sup>2</sup>&frasl;<sub><var>n</var></sub> &sum; (<var>y</var><sub><var>i</var></sub> &minus; (<var>wx</var><sub><var>i</var></sub>+<var>b</var>))</div>
+<p>Update both parameters <em>simultaneously</em>: <var>w</var> &larr; <var>w</var> &minus; &eta;&part;&#8466;/&part;<var>w</var>, <var>b</var> &larr; <var>b</var> &minus; &eta;&part;&#8466;/&part;<var>b</var>, then recompute &#8466; at the new (<var>w</var>,<var>b</var>) without rounding them first.
+The quiz started iteration 3 from <var>w</var> = 1.32, <var>b</var> = 0.78, &#8466; = 0.1732; the data points and &eta; were on the (blank) class slide, so consult your notes to redo it.</p>
+
+<h2>Stochastic gradient descent (SGD)</h2>
+<ul>
+  <li>A variant of GD for large datasets (typical in machine learning). GD uses the gradient over the <em>entire</em> dataset; SGD approximates it from <strong>one example or a small random mini-batch</strong> each iteration, which is &ldquo;noisy&rdquo; but faster.</li>
+  <li>Update rule: <strong><var>&theta;</var> &larr; <var>&theta;</var> &minus; &eta;&nbsp;&nabla;&#8466;(<var>&theta;</var>; <var>x</var><sub><var>i</var></sub>, <var>y</var><sub><var>i</var></sub>)</strong> where (<var>x</var><sub><var>i</var></sub>,<var>y</var><sub><var>i</var></sub>) is a randomly chosen data point.</li>
+</ul>
+<div class="two">
+<div class="box ex"><span class="label">Advantages</span><ul>
+  <li><strong>Efficient</strong> for large data.</li>
+  <li><strong>Faster convergence</strong>: noise can help escape local minima in non-convex landscapes.</li>
+  <li><strong>Online learning</strong>: handles streaming data.</li></ul></div>
+<div class="box warn"><span class="label">Disadvantages</span><ul>
+  <li><strong>Noisy updates</strong>: zig-zag path, slower convergence to the exact minimum.</li>
+  <li><strong>Learning-rate sensitivity</strong>: too high &rarr; divergence; too low &rarr; stalls.</li></ul></div>
+</div>
+
+<h3>Considerations for GD and SGD</h3>
+<ul>
+  <li><strong>Learning rate &eta;</strong>: too small &rarr; slow (many tiny steps); too large &rarr; overshoot/oscillate (e.g., &eta; = 0.2 might jump past the minimum). Balancing act, tuned experimentally.</li>
+  <li><strong>Convergence</strong>: for <strong>convex</strong> functions (e.g., MSE in linear regression) GD finds the <strong>global</strong> minimum. For <strong>non-convex</strong> functions (neural networks) it may stop at a local minimum, where SGD can do better.</li>
+  <li><strong>Neural networks</strong>: loss depends on many weights/biases; use <strong>backpropagation</strong> to compute all gradients, then update each parameter with GD/SGD.</li>
+</ul>
+
+<h2>The fencing problem (first constrained example)</h2>
+<div class="box def"><span class="label">Problem</span>
+<p>A farmer has 2400 ft of fencing and wants a rectangular field bordering a straight river. No fence is needed along the river. What dimensions give the largest area?</p></div>
+<p><span class="blankslide">(The model slide was blank in class; this is the standard formulation, check against your notes.)</span>
+Let <var>x</var> = length of each of the two sides perpendicular to the river and <var>y</var> = the side parallel to it.</p>
+<div class="formula">max <var>xy</var> &nbsp; s.t. &nbsp; 2<var>x</var> + <var>y</var> &le; 2400, &nbsp; <var>x</var>, <var>y</var> &ge; 0</div>
+<p>Use all the fence: <var>y</var> = 2400 &minus; 2<var>x</var>, so area <var>A</var>(<var>x</var>) = 2400<var>x</var> &minus; 2<var>x</var><sup>2</sup>. Then <var>A</var>&prime; = 2400 &minus; 4<var>x</var> = 0 &rArr; <strong><var>x</var> = 600, <var>y</var> = 1200</strong>, area = <strong>720,000 ft&sup2;</strong>.</p>
+
+<h3>Terminology (using the fencing problem)</h3>
+<table>
+  <tr><th>Term</th><th>Meaning</th><th>Fencing examples</th></tr>
+  <tr><td><strong>Feasible solution</strong></td><td>Satisfies all constraints</td><td>(10, 25), (100, 2200), (600, 1200)</td></tr>
+  <tr><td><strong>Infeasible solution</strong></td><td>Violates at least one constraint</td><td>(1200, 100): 2<var>x</var>+<var>y</var> = 2500 &gt; 2400<br>(1300, 100): 2700 &gt; 2400 <em>and</em> <var>x</var> &gt; 1200<br>(100, 2500): 2700 &gt; 2400 <em>and</em> <var>y</var> &gt; 2400</td></tr>
+  <tr><td><strong>Optimal solution</strong></td><td>A best feasible solution. There <em>can</em> be more than one (not unique), but not here</td><td><var>x</var>* = 600, <var>y</var>* = 1200</td></tr>
+  <tr><td><strong>Feasible set</strong></td><td>All feasible solutions</td><td>{(<var>x</var>,<var>y</var>) | 2<var>x</var>+<var>y</var> &le; 2400, <var>x</var> &le; 1200, <var>y</var> &le; 2400, <var>x</var> &ge; 0, <var>y</var> &ge; 0}</td></tr>
+  <tr><td><strong>Objective value</strong></td><td>Value of the objective at a given solution</td><td>(100, 2200) &rarr; <var>xy</var> = 220,000</td></tr>
+</table>
+<div class="box warn"><span class="label">Is it an LP?</span>
+<p><strong>No.</strong> The objective <var>xy</var> is a product of variables (nonlinear), so the fencing problem is not a linear program, even though its constraints are linear. The Diet and Wyndor problems <em>are</em> LPs (Chapter 6).</p></div>
+
+<div class="box chk"><span class="label">Self-check</span>
+<ol>
+  <li>Do one GD step on <var>f</var>(<var>x</var>) = <var>x</var><sup>2</sup> from <var>x</var> = 4 with &eta; = 0.25.
+    <div class="answer">&nabla;<var>f</var> = 2<var>x</var> = 8; <var>x</var> &larr; 4 &minus; 0.25&middot;8 = 2. (<var>f</var> drops from 16 to 4.)</div></li>
+  <li>What happens in GD if &eta; is too large? Too small?
+    <div class="answer">Too large: overshoots and oscillates or diverges. Too small: converges very slowly.</div></li>
+  <li>How does SGD differ from GD, and what does it trade away?
+    <div class="answer">SGD uses one example/mini-batch per step instead of the full dataset: cheaper steps and can escape local minima, but noisier, zig-zagging updates.</div></li>
+  <li>When does GD find the global minimum?
+    <div class="answer">For convex functions (e.g., MSE in linear regression).</div></li>
+  <li>Is (700, 1000) feasible for the fencing problem? What is its area?
+    <div class="answer">2(700)+1000 = 2400 &le; 2400 so yes; area = 700,000, which is less than the optimal 720,000.</div></li>
+</ol></div>
+
+<!-- ============================ CH 5 ============================ -->
+<h1 class="chapter" id="c5">5. Linear programs: general, standard &amp; matrix form</h1>
+<p class="source">Source: Handout 02 &middot; Assignment 3, Q6&ndash;Q7</p>
+
+<h2>General form</h2>
+<div class="box def"><span class="label">General form of an LP</span>
+<p>Continuous decision variables <var>x</var><sub>1</sub>,&hellip;,<var>x</var><sub><var>n</var></sub>.</p>
+<div class="formula">max (or min) &nbsp; <var>c</var><sub>1</sub><var>x</var><sub>1</sub> + &hellip; + <var>c</var><sub><var>n</var></sub><var>x</var><sub><var>n</var></sub></div>
+<div class="formula">s.t. &nbsp; <var>a</var><sub><var>i</var>1</sub><var>x</var><sub>1</sub> + &hellip; + <var>a</var><sub><var>in</var></sub><var>x</var><sub><var>n</var></sub> &nbsp;(&le;, = or &ge;)&nbsp; <var>b</var><sub><var>i</var></sub>, &nbsp; <var>i</var> = 1,&hellip;,<var>m</var></div>
+<div class="formula"><var>x</var><sub><var>j</var></sub> &ge; 0, &le; 0, or <em>free</em></div></div>
+
+<h2>Standard form</h2>
+<div class="box def"><span class="label">Standard form (this course)</span>
+<div class="formula">min &nbsp; &sum;<sub><var>j</var></sub> <var>c</var><sub><var>j</var></sub><var>x</var><sub><var>j</var></sub> &nbsp;&nbsp; s.t. &nbsp; &sum;<sub><var>j</var></sub> <var>a</var><sub><var>ij</var></sub><var>x</var><sub><var>j</var></sub> &ge; <var>b</var><sub><var>i</var></sub> &nbsp;(<var>i</var> = 1,&hellip;,<var>m</var>), &nbsp;&nbsp; <var>x</var><sub><var>j</var></sub> &ge; 0 &nbsp;(<var>j</var> = 1,&hellip;,<var>n</var>)</div>
+<p>i.e., objective is <strong>min</strong>, every constraint is <strong>&ge;</strong>, every variable is <strong>non-negative</strong>. (&ldquo;One example of a standard form&rdquo; per the slide.)</p></div>
+
+<h3>Conversion rules</h3>
+<table>
+  <tr><th>To fix&hellip;</th><th>Do this</th></tr>
+  <tr><td>max <var>f</var></td><td>min &minus;<var>f</var> (and negate the final value)</td></tr>
+  <tr><td>constraint <var>a</var>&middot;<var>x</var> &le; <var>b</var></td><td>multiply both sides by &minus;1: &minus;<var>a</var>&middot;<var>x</var> &ge; &minus;<var>b</var></td></tr>
+  <tr><td>constraint <var>a</var>&middot;<var>x</var> = <var>b</var></td><td>replace with two: <var>a</var>&middot;<var>x</var> &ge; <var>b</var> <em>and</em> <var>a</var>&middot;<var>x</var> &le; <var>b</var> (then flip the &le; as above)</td></tr>
+  <tr><td>variable <var>x</var><sub><var>j</var></sub> &le; 0</td><td>substitute <var>x</var><sub><var>j</var></sub> = &minus;<var>x</var><sub><var>j</var></sub>&prime; with <var>x</var><sub><var>j</var></sub>&prime; &ge; 0</td></tr>
+  <tr><td>free variable <var>x</var><sub><var>j</var></sub></td><td><var>x</var><sub><var>j</var></sub> = <var>x</var><sub><var>j</var></sub><sup>+</sup> &minus; <var>x</var><sub><var>j</var></sub><sup>&minus;</sup> with both &ge; 0</td></tr>
+  <tr><td>constants on the left of a constraint</td><td>move them to the right-hand side first</td></tr>
+</table>
+<p><em>Why only min?</em> Because max converts to min. <em>Why only &ge; and x &ge; 0?</em> Because you can always convert between &le; and &ge;, and between &ldquo;free&rdquo; and &ge; 0.</p>
+
+<h2>Matrix form</h2>
+<div class="box def"><span class="label">Matrix form</span>
+<div class="formula">min &nbsp; <strong>c</strong><sup>T</sup><strong>x</strong> &nbsp;&nbsp; s.t. &nbsp; <strong>Ax</strong> (&le;, = or &ge;) <strong>b</strong>, &nbsp;&nbsp; <strong>x</strong> (&ge; 0, &le; 0 or free)</div>
+<ul>
+  <li><strong>c</strong><sup>T</sup> = [<var>c</var><sub>1</sub>,&hellip;,<var>c</var><sub><var>n</var></sub>]: objective coefficients (1&times;<var>n</var>).</li>
+  <li><strong>x</strong> = column of <var>n</var> decision variables.</li>
+  <li><strong>A</strong> = <var>m</var>&times;<var>n</var> matrix of constraint coefficients (row = constraint, column = variable).</li>
+  <li><strong>b</strong> = column of <var>m</var> right-hand sides.</li>
+</ul></div>
+<p>Matrix operations you need: transpose of a vector; <strong>c</strong><sup>T</sup><strong>x</strong> (a single number: the objective value); <strong>Ax</strong> (a vector: the left-hand side of every constraint).</p>
+
+<div class="box ex"><span class="label">Practice example from slide 12: find A, c, x, b</span>
+<div class="formula">max 5<var>x</var><sub>1</sub> &minus; 3<var>x</var><sub>2</sub> &minus; <var>x</var><sub>3</sub><br>
+<var>x</var><sub>1</sub> + 2<var>x</var><sub>2</sub> &minus; 7<var>x</var><sub>3</sub> &minus; 5 &le; 0<br>
+&minus;3<var>x</var><sub>1</sub> + <var>x</var><sub>2</sub> + <var>x</var><sub>3</sub> &minus; 4 = 0<br>
+9<var>x</var><sub>1</sub> + 2<var>x</var><sub>2</sub> + 4<var>x</var><sub>3</sub> &minus; 1 &ge; 11<br>
+<var>x</var><sub>2</sub> &minus; <var>x</var><sub>3</sub> + <var>x</var><sub>1</sub> &le; 9, &nbsp; <var>x</var><sub>1</sub>,<var>x</var><sub>2</sub>,<var>x</var><sub>3</sub> &ge; 0</div>
+<p><strong>Step 1</strong>: move constants right and line up variables in order <var>x</var><sub>1</sub>,<var>x</var><sub>2</sub>,<var>x</var><sub>3</sub>:<br>
+<var>x</var><sub>1</sub> + 2<var>x</var><sub>2</sub> &minus; 7<var>x</var><sub>3</sub> &le; 5; &nbsp; &minus;3<var>x</var><sub>1</sub> + <var>x</var><sub>2</sub> + <var>x</var><sub>3</sub> = 4; &nbsp; 9<var>x</var><sub>1</sub> + 2<var>x</var><sub>2</sub> + 4<var>x</var><sub>3</sub> &ge; 12; &nbsp; <var>x</var><sub>1</sub> + <var>x</var><sub>2</sub> &minus; <var>x</var><sub>3</sub> &le; 9.</p>
+<p><strong>Step 2</strong>: read off the pieces (row order = constraint order):</p>
+<table class="mat">
+  <tr><td><strong>A</strong> =</td><td>1</td><td>2</td><td>&minus;7</td><td rowspan="4" style="width:24px;border:0"></td><td><strong>b</strong> =</td><td>5</td><td rowspan="4" style="width:24px;border:0"></td><td><strong>c</strong><sup>T</sup> =</td><td colspan="3">[5, &minus;3, &minus;1]</td></tr>
+  <tr><td></td><td>&minus;3</td><td>1</td><td>1</td><td></td><td>4</td><td></td><td colspan="3"></td></tr>
+  <tr><td></td><td>9</td><td>2</td><td>4</td><td></td><td>12</td><td></td><td><strong>x</strong><sup>T</sup> =</td><td colspan="3">[<var>x</var><sub>1</sub>, <var>x</var><sub>2</sub>, <var>x</var><sub>3</sub>]</td></tr>
+  <tr><td></td><td>1</td><td>1</td><td>&minus;1</td><td></td><td>9</td><td></td><td colspan="4"></td></tr>
+</table>
+<p>Constraint senses are (&le;, =, &ge;, &le;). If the problem is written as a <em>min</em>, use <strong>c</strong><sup>T</sup> = [&minus;5, 3, 1].</p></div>
+<div class="box warn"><span class="label">Watch out</span>
+<p>The most common mistake is forgetting to move the constant (&minus;5, &minus;4, &minus;1) to the right-hand side, so that <strong>b</strong> comes out wrong. Also keep zero coefficients for missing variables (e.g., a 0 for <var>x</var><sub>3</sub> in a row that does not use it).</p></div>
+
+<div class="box chk"><span class="label">Self-check</span>
+<ol>
+  <li>Put &ldquo;max &minus;<var>x</var><sub>1</sub> + 2<var>x</var><sub>2</sub> s.t. <var>x</var><sub>1</sub> + <var>x</var><sub>2</sub> &le; 8, 3<var>x</var><sub>1</sub> &minus; 2<var>x</var><sub>2</sub> = 5, <var>x</var><sub>1</sub>,<var>x</var><sub>2</sub> &ge; 0&rdquo; in standard form.
+    <div class="answer">min <var>x</var><sub>1</sub> &minus; 2<var>x</var><sub>2</sub>; &minus;<var>x</var><sub>1</sub> &minus; <var>x</var><sub>2</sub> &ge; &minus;8; 3<var>x</var><sub>1</sub> &minus; 2<var>x</var><sub>2</sub> &ge; 5; &minus;3<var>x</var><sub>1</sub> + 2<var>x</var><sub>2</sub> &ge; &minus;5; <var>x</var><sub>1</sub>,<var>x</var><sub>2</sub> &ge; 0. (The equality became two &ge; constraints.)</div></li>
+  <li>How do you handle a free variable?
+    <div class="answer">Write <var>x</var> = <var>x</var><sup>+</sup> &minus; <var>x</var><sup>&minus;</sup> with <var>x</var><sup>+</sup>, <var>x</var><sup>&minus;</sup> &ge; 0.</div></li>
+  <li>If <strong>A</strong> is 4&times;3, how many variables and constraints are there, and what is the size of <strong>Ax</strong>?
+    <div class="answer">3 variables, 4 constraints; <strong>Ax</strong> is a 4&times;1 vector.</div></li>
+</ol></div>
+
+<!-- ============================ CH 6 ============================ -->
+<h1 class="chapter" id="c6">6. LP models: Diet &amp; Wyndor Glass; LP assumptions</h1>
+<p class="source">Source: Handout 02 (examples and assumptions) &middot; Assignment 2 (production model)</p>
+
+<h2>Recipe for formulating an LP</h2>
+<ol>
+  <li><strong>Define the decision variables</strong> in words, with units.</li>
+  <li>Write the <strong>objective</strong> (sum of contribution &times; variable).</li>
+  <li>Write each <strong>constraint</strong> (resource used &le; available; requirement met &ge; minimum).</li>
+  <li>State variable <strong>sign restrictions</strong>.</li>
+  <li><strong>Check units</strong> of the objective and of each constraint (Assignment 3 asks you to demonstrate this).</li>
+</ol>
+
+<h2>The Diet problem (Winston, p. 69)</h2>
+<p>Four foods; each day you must eat at least 500 calories, 6 oz chocolate, 10 oz sugar and 8 oz fat. Minimize cost.</p>
+<table>
+  <tr><th>Food (per unit)</th><th class="num">Cost (&cent;)</th><th class="num">Calories</th><th class="num">Chocolate (oz)</th><th class="num">Sugar (oz)</th><th class="num">Fat (oz)</th></tr>
+  <tr><td><var>x</var><sub>1</sub> Brownie</td><td class="num">50</td><td class="num">400</td><td class="num">3</td><td class="num">2</td><td class="num">2</td></tr>
+  <tr><td><var>x</var><sub>2</sub> Chocolate ice cream (1 scoop)</td><td class="num">20</td><td class="num">200</td><td class="num">2</td><td class="num">2</td><td class="num">4</td></tr>
+  <tr><td><var>x</var><sub>3</sub> Cola (1 bottle)</td><td class="num">30</td><td class="num">150</td><td class="num">0</td><td class="num">4</td><td class="num">1</td></tr>
+  <tr><td><var>x</var><sub>4</sub> Pineapple cheesecake (1 piece)</td><td class="num">80</td><td class="num">500</td><td class="num">0</td><td class="num">4</td><td class="num">5</td></tr>
+</table>
+<div class="formula">min 50<var>x</var><sub>1</sub> + 20<var>x</var><sub>2</sub> + 30<var>x</var><sub>3</sub> + 80<var>x</var><sub>4</sub></div>
+<div class="formula" style="text-align:left;display:inline-block">
+400<var>x</var><sub>1</sub> + 200<var>x</var><sub>2</sub> + 150<var>x</var><sub>3</sub> + 500<var>x</var><sub>4</sub> &ge; 500 &nbsp;(calories)<br>
+3<var>x</var><sub>1</sub> + 2<var>x</var><sub>2</sub> &ge; 6 &nbsp;(chocolate)<br>
+2<var>x</var><sub>1</sub> + 2<var>x</var><sub>2</sub> + 4<var>x</var><sub>3</sub> + 4<var>x</var><sub>4</sub> &ge; 10 &nbsp;(sugar)<br>
+2<var>x</var><sub>1</sub> + 4<var>x</var><sub>2</sub> + <var>x</var><sub>3</sub> + 5<var>x</var><sub>4</sub> &ge; 8 &nbsp;(fat)<br>
+<var>x</var><sub>1</sub>,<var>x</var><sub>2</sub>,<var>x</var><sub>3</sub>,<var>x</var><sub>4</sub> &ge; 0</div>
+<p><strong>Matrix form</strong> (slide 10 question): <strong>c</strong><sup>T</sup> = [50, 20, 30, 80]; <strong>b</strong> = [500, 6, 10, 8]<sup>T</sup>; <strong>x</strong> = (brownies, scoops, bottles, pieces)<sup>T</sup>;
+<strong>A</strong> = rows [400, 200, 150, 500], [3, 2, 0, 0], [2, 2, 4, 4], [2, 4, 1, 5]. Already in standard form (min, &ge;, <strong>x</strong> &ge; 0).</p>
+<p>Solver check (I ran it; not stated on the slide): optimal cost <strong>90&cent;</strong> with 3 scoops of ice cream + 1 bottle of cola (<var>x</var><sub>2</sub> = 3, <var>x</var><sub>3</sub> = 1). Verify: chocolate 6 = 6 (binding), sugar 6 + 4 = 10 = 10 (binding), calories 750 &ge; 500, fat 13 &ge; 8.</p>
+
+<h2>The Wyndor Glass Co. problem (Hillier &amp; Lieberman)</h2>
+<p>Two products (windows, glass doors), made in batches of 20; <strong>production rate</strong> = batches per week. Three plants have limited weekly hours.</p>
+<table>
+  <tr><th>Plant</th><th class="num">Hours/batch, Product 1</th><th class="num">Hours/batch, Product 2</th><th class="num">Hours available per week</th></tr>
+  <tr><td>1</td><td class="num">1</td><td class="num">0</td><td class="num">4</td></tr>
+  <tr><td>2</td><td class="num">0</td><td class="num">2</td><td class="num">12</td></tr>
+  <tr><td>3</td><td class="num">3</td><td class="num">2</td><td class="num">18</td></tr>
+  <tr><td>Profit per batch</td><td class="num">$3,000</td><td class="num">$5,000</td><td></td></tr>
+</table>
+<div class="box ex"><span class="label">Model</span>
+<p><var>x</var><sub>1</sub>, <var>x</var><sub>2</sub> = batches per week of Product 1, 2. Objective in $1000s:</p>
+<div class="formula">max <var>Z</var> = 3<var>x</var><sub>1</sub> + 5<var>x</var><sub>2</sub> &nbsp; s.t. &nbsp; <var>x</var><sub>1</sub> &le; 4 &nbsp;(Plant 1), &nbsp; 2<var>x</var><sub>2</sub> &le; 12 &nbsp;(Plant 2), &nbsp; 3<var>x</var><sub>1</sub> + 2<var>x</var><sub>2</sub> &le; 18 &nbsp;(Plant 3), &nbsp; <var>x</var><sub>1</sub>,<var>x</var><sub>2</sub> &ge; 0</div>
+<p>Matrix form: <strong>c</strong> = [3, 5], <strong>A</strong> = [[1,0],[0,2],[3,2]], <strong>b</strong> = [4, 12, 18]. Optimal: <var>x</var><sub>1</sub> = 2, <var>x</var><sub>2</sub> = 6, <var>Z</var> = 36 (solved graphically in Chapter 7; confirmed by a solver).</p></div>
+
+<h2>Is it an LP?</h2>
+<table>
+  <tr><th>Problem</th><th>LP?</th><th>Why</th></tr>
+  <tr><td>Fence installation</td><td><strong>No</strong></td><td>Objective <var>xy</var> is nonlinear</td></tr>
+  <tr><td>Diet</td><td><strong>Yes</strong></td><td>Linear objective and constraints, continuous variables</td></tr>
+  <tr><td>Wyndor Glass</td><td><strong>Yes</strong></td><td>Same</td></tr>
+</table>
+
+<h2>Assumptions behind every LP</h2>
+<table>
+  <tr><th>Assumption</th><th>Meaning</th><th>Wyndor illustration</th></tr>
+  <tr><td><strong>Proportionality</strong> (objective)</td><td>Contribution to the objective is proportional to the variable&rsquo;s value</td><td><var>x</var><sub>1</sub> = 4 earns exactly 4&times; what <var>x</var><sub>1</sub> = 1 does</td></tr>
+  <tr><td><strong>Additivity</strong> (objective)</td><td>A variable&rsquo;s contribution is independent of the other variables</td><td>Product 1 always contributes 3 (thousand) whatever <var>x</var><sub>2</sub> is</td></tr>
+  <tr><td><strong>Proportionality</strong> (constraints)</td><td>Each variable&rsquo;s contribution to the left-hand side is proportional to its value; <strong>no economies of scale</strong></td><td>In Plant 3, a batch of Product 1 always takes 1.5 h more than a batch of Product 2</td></tr>
+  <tr><td><strong>Additivity</strong> (constraints)</td><td>Contribution to a constraint is independent of other variables</td><td>A batch of Product 2 always takes 2 h regardless of <var>x</var><sub>1</sub></td></tr>
+  <tr><td><strong>Divisibility</strong></td><td>Variables may take fractional values</td><td>2.5 batches is allowed</td></tr>
+  <tr><td><strong>Certainty</strong></td><td>Every parameter (<var>c</var>, <var>A</var>, <var>b</var>) is known with certainty</td><td>Hours and profits are exact</td></tr>
+</table>
+
+<div class="box chk"><span class="label">Self-check</span>
+<ol>
+  <li>Give the decision variables, objective and one constraint for a two-product production problem with 100 machine-hours (Product A uses 2 h, Product B 3 h; profits $50 and $40).
+    <div class="answer"><var>x</var><sub>A</sub>, <var>x</var><sub>B</sub> = units produced; max 50<var>x</var><sub>A</sub> + 40<var>x</var><sub>B</sub>; 2<var>x</var><sub>A</sub> + 3<var>x</var><sub>B</sub> &le; 100; <var>x</var><sub>A</sub>,<var>x</var><sub>B</sub> &ge; 0.</div></li>
+  <li>Which LP assumption is violated if setup costs make producing 100 units cost less <em>per unit</em> than producing 10?
+    <div class="answer">Proportionality (economies of scale).</div></li>
+  <li>Which assumption is violated if a variable must be a whole number (e.g., trucks)?
+    <div class="answer">Divisibility (this becomes an integer program).</div></li>
+  <li>Why is the Diet problem an LP but the fencing problem is not?
+    <div class="answer">Fencing has the nonlinear objective <var>xy</var>; Diet has a linear objective and constraints.</div></li>
+  <li>In the Diet optimum, which constraints are binding?
+    <div class="answer">Chocolate (6 = 6) and sugar (10 = 10); calories and fat have slack.</div></li>
+</ol></div>
+
+<!-- ============================ CH 7 ============================ -->
+<h1 class="chapter" id="c7">7. The graphical solution method</h1>
+<p class="source">Source: Handout 03 &middot; for LPs with two decision variables</p>
+
+<h2>Steps</h2>
+<ol>
+  <li><strong>Draw each constraint boundary line.</strong> Test the origin (or any point off the line) to see which side is allowed.</li>
+  <li><strong>Feasible region</strong> = where all constraints hold simultaneously (include <var>x</var><sub>1</sub>,<var>x</var><sub>2</sub> &ge; 0).</li>
+  <li>Find the <strong>slope of one objective (iso-profit / iso-cost) line</strong>; all others are parallel.</li>
+  <li>Slide a straight edge with that slope through the region in the direction of <strong>improving</strong> objective value (up for max, down for min). Stop at the <strong>last</strong> instant it still touches the region: the <strong>optimal objective line</strong>.</li>
+  <li>A feasible point on that line is an <strong>optimal solution</strong>. Read off the coordinates and compute the objective value.</li>
+</ol>
+<p>For the grader (Assignment 3 Q11): show the feasible region, at least two iso-lines including the optimal one, the optimal solution and the optimal objective value.</p>
+
+<h2>Wyndor Glass worked through</h2>
+<figure><svg viewBox="0 0 510 370" width="510" role="img" aria-label="Wyndor Glass feasible region and iso-profit lines" xmlns="http://www.w3.org/2000/svg">
+<line x1="50" y1="330" x2="50" y2="26" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="88" y1="330" x2="88" y2="26" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="126" y1="330" x2="126" y2="26" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="164" y1="330" x2="164" y2="26" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="202" y1="330" x2="202" y2="26" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="240" y1="330" x2="240" y2="26" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="278" y1="330" x2="278" y2="26" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="316" y1="330" x2="316" y2="26" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="354" y1="330" x2="354" y2="26" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="392" y1="330" x2="392" y2="26" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="50" y1="330" x2="392" y2="330" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="50" y1="292" x2="392" y2="292" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="50" y1="254" x2="392" y2="254" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="50" y1="216" x2="392" y2="216" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="50" y1="178" x2="392" y2="178" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="50" y1="140" x2="392" y2="140" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="50" y1="102" x2="392" y2="102" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="50" y1="64" x2="392" y2="64" stroke="#e3e3e3" stroke-width="1"/>
+<line x1="50" y1="26" x2="392" y2="26" stroke="#e3e3e3" stroke-width="1"/>
+<polygon points="50,330 202,330 202,216 126,102 50,102" fill="#bcd3f0" fill-opacity=".6" stroke="#1f4f96" stroke-width="2"/>
+<line x1="50" y1="330" x2="392" y2="330" stroke="#111" stroke-width="1.6"/>
+<line x1="50" y1="330" x2="50" y2="26" stroke="#111" stroke-width="1.6"/>
+<text x="50" y="345" font-size="11" text-anchor="middle" fill="#333">0</text>
+<text x="88" y="345" font-size="11" text-anchor="middle" fill="#333">1</text>
+<text x="126" y="345" font-size="11" text-anchor="middle" fill="#333">2</text>
+<text x="164" y="345" font-size="11" text-anchor="middle" fill="#333">3</text>
+<text x="202" y="345" font-size="11" text-anchor="middle" fill="#333">4</text>
+<text x="240" y="345" font-size="11" text-anchor="middle" fill="#333">5</text>
+<text x="278" y="345" font-size="11" text-anchor="middle" fill="#333">6</text>
+<text x="316" y="345" font-size="11" text-anchor="middle" fill="#333">7</text>
+<text x="354" y="345" font-size="11" text-anchor="middle" fill="#333">8</text>
+<text x="392" y="345" font-size="11" text-anchor="middle" fill="#333">9</text>
+<text x="44" y="334" font-size="11" text-anchor="end" fill="#333">0</text>
+<text x="44" y="296" font-size="11" text-anchor="end" fill="#333">1</text>
+<text x="44" y="258" font-size="11" text-anchor="end" fill="#333">2</text>
+<text x="44" y="220" font-size="11" text-anchor="end" fill="#333">3</text>
+<text x="44" y="182" font-size="11" text-anchor="end" fill="#333">4</text>
+<text x="44" y="144" font-size="11" text-anchor="end" fill="#333">5</text>
+<text x="44" y="106" font-size="11" text-anchor="end" fill="#333">6</text>
+<text x="44" y="68" font-size="11" text-anchor="end" fill="#333">7</text>
+<text x="44" y="30" font-size="11" text-anchor="end" fill="#333">8</text>
+<text x="221.0" y="363" font-size="12" text-anchor="middle" fill="#111">x₁ (batches/week, Product 1)</text>
+<text x="14" y="178" font-size="12" text-anchor="middle" fill="#111" transform="rotate(-90 14 178)">x₂ (Product 2)</text>
+<line x1="50" y1="216.0" x2="240.0" y2="330" stroke="#a3122a" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text x="241.9" y="316.7" font-size="12" font-weight="600" fill="#a3122a">Z = 15</text>
+<line x1="50" y1="102.0" x2="392" y2="307.2" stroke="#a3122a" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text x="395.8" y="311.2" font-size="12" font-weight="600" fill="#a3122a">Z = 30</text>
+<line x1="50" y1="56.4" x2="392" y2="261.6" stroke="#a3122a" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text x="395.8" y="265.6" font-size="12" font-weight="600" fill="#a3122a">Z = 36 (optimal)</text>
+<text x="205.8" y="273.0" font-size="11" fill="#1f4f96">x₁ = 4</text>
+<text x="54.6" y="96.3" font-size="11" fill="#1f4f96">x₂ = 6</text>
+<text x="143.1" y="140.0" font-size="11" fill="#1f4f96" text-anchor="middle" transform="rotate(56 143.1 140.0)">Plant 3</text>
+<circle cx="50" cy="330" r="3.5" fill="#1f4f96"/>
+<circle cx="202" cy="330" r="3.5" fill="#1f4f96"/>
+<circle cx="202" cy="216" r="3.5" fill="#1f4f96"/>
+<circle cx="50" cy="102" r="3.5" fill="#1f4f96"/>
+<text x="205.8" y="220" font-size="11" fill="#333">(4,3)</text>
+<circle cx="126" cy="102" r="5.5" fill="#a3122a"/>
+<text x="131.7" y="92" font-size="12" font-weight="700" fill="#a3122a">(2, 6)</text>
+<text x="99.4" y="292.0" font-size="12" fill="#1f4f96" text-anchor="middle">feasible region</text>
+</svg><figcaption>Feasible region (shaded) for max 3<var>x</var><sub>1</sub>+5<var>x</var><sub>2</sub>; dashed lines are iso-profit lines <var>Z</var> = 15, 30, 36; &ldquo;Plant 3&rdquo; is the edge 3<var>x</var><sub>1</sub>+2<var>x</var><sub>2</sub> = 18</figcaption></figure>
+<ul>
+  <li>Constraint lines: <var>x</var><sub>1</sub> = 4 (vertical), 2<var>x</var><sub>2</sub> = 12 i.e. <var>x</var><sub>2</sub> = 6 (horizontal), 3<var>x</var><sub>1</sub> + 2<var>x</var><sub>2</sub> = 18. All three allow the side containing the origin.</li>
+  <li>Objective 3<var>x</var><sub>1</sub> + 5<var>x</var><sub>2</sub> = <var>Z</var> &rArr; <var>x</var><sub>2</sub> = &minus;<sup>3</sup>&frasl;<sub>5</sub><var>x</var><sub>1</sub> + <var>Z</var>/5. Slope &minus;3/5. Increasing <var>Z</var> shifts the line up and to the right.</li>
+  <li><var>Z</var> = 15 and <var>Z</var> = 30 still cut through the region; <var>Z</var> = 36 touches only the corner (2, 6). Beyond 36 the line leaves the region.</li>
+</ul>
+<table>
+  <tr><th>Corner point</th><th>Where it comes from</th><th class="num"><var>Z</var> = 3<var>x</var><sub>1</sub>+5<var>x</var><sub>2</sub></th></tr>
+  <tr><td>(0, 0)</td><td>axes</td><td class="num">0</td></tr>
+  <tr><td>(4, 0)</td><td><var>x</var><sub>1</sub> = 4 &amp; <var>x</var><sub>2</sub> = 0</td><td class="num">12</td></tr>
+  <tr><td>(4, 3)</td><td><var>x</var><sub>1</sub> = 4 &amp; 3<var>x</var><sub>1</sub>+2<var>x</var><sub>2</sub> = 18</td><td class="num">27</td></tr>
+  <tr><td><strong>(2, 6)</strong></td><td><var>x</var><sub>2</sub> = 6 &amp; 3<var>x</var><sub>1</sub>+2<var>x</var><sub>2</sub> = 18</td><td class="num"><strong>36 (optimal)</strong></td></tr>
+  <tr><td>(0, 6)</td><td><var>x</var><sub>1</sub> = 0 &amp; <var>x</var><sub>2</sub> = 6</td><td class="num">30</td></tr>
+</table>
+<p>Finding a corner algebraically: solve the two binding constraint equations together. E.g. <var>x</var><sub>2</sub> = 6 in 3<var>x</var><sub>1</sub> + 2(6) = 18 &rArr; <var>x</var><sub>1</sub> = 2.</p>
+
+<h2>Special cases (Handout 03, &ldquo;take hand notes&rdquo; topics)</h2>
+<p class="blankslide">These figures were blank in the handout for you to draw in class. The statements below are the standard results, check against your notes.</p>
+<table>
+  <tr><th>Outcome</th><th>What you see</th><th>Example / how to recognize it</th></tr>
+  <tr><td><strong>Unique optimal solution</strong></td><td>Iso-line last touches the region at <em>one</em> corner</td><td>Wyndor original: (2, 6)</td></tr>
+  <tr><td><strong>Multiple optimal solutions</strong></td><td>Iso-line is <em>parallel</em> to a binding constraint edge, so the whole edge is optimal (infinitely many solutions, same value)</td><td>See question B below</td></tr>
+  <tr><td><strong>Unbounded</strong></td><td>Region extends infinitely in the improving direction, so the objective can grow without limit (a max problem with no upper bound on the objective)</td><td>E.g. max <var>x</var><sub>1</sub> + <var>x</var><sub>2</sub> s.t. <var>x</var><sub>1</sub> &minus; <var>x</var><sub>2</sub> &le; 2, <var>x</var> &ge; 0. An unbounded <em>region</em> does not always mean an unbounded <em>objective</em>: it depends on the objective direction.</td></tr>
+  <tr><td><strong>Infeasible</strong></td><td>No point satisfies all constraints (empty feasible region)</td><td>See question C below</td></tr>
+</table>
+
+<h3>Key observations about corner points &amp; binding constraints <span class="note">(standard results)</span></h3>
+<ul>
+  <li>If an LP has an optimal solution, at least one optimal solution is at a <strong>corner point</strong> (extreme point). So it is enough to compare the corner points.</li>
+  <li>With several optimal solutions, at least <em>two adjacent corners</em> are optimal, and every point on the segment between them is too.</li>
+  <li>A <strong>binding constraint</strong> holds with equality at the solution; a <strong>non-binding</strong> one has slack. In two variables, a corner is where two binding constraints intersect.</li>
+  <li>Wyndor at (2, 6): plant 2 (2&middot;6 = 12) and plant 3 (3&middot;2 + 2&middot;6 = 18) are binding; plant 1 has slack (2 &lt; 4).</li>
+</ul>
+
+<h2>The three &ldquo;what if&rdquo; questions on Wyndor</h2>
+<div class="box ex"><span class="label">A. Are there multiple optimal solutions in the original problem?</span>
+<p><strong>No.</strong> The objective line slope (&minus;3/5) is not parallel to any constraint edge, so it touches the region at the single corner (2, 6).</p></div>
+<div class="box ex"><span class="label">B. What if profit per batch of Product 2 were $2,000?</span>
+<p>The objective becomes 3<var>x</var><sub>1</sub> + 2<var>x</var><sub>2</sub>, whose iso-lines have slope &minus;3/2, <strong>parallel</strong> to the Plant 3 constraint 3<var>x</var><sub>1</sub> + 2<var>x</var><sub>2</sub> = 18. Every point on the segment from (2, 6) to (4, 3) is optimal with <var>Z</var> = <strong>18</strong>. <strong>Not unique</strong>: multiple optimal solutions.</p></div>
+<div class="box ex"><span class="label">C. What if we add the constraint 3<var>x</var><sub>1</sub> + 5<var>x</var><sub>2</sub> &ge; 50?</span>
+<p>The slide requires points <em>above</em> that line, while the original region lies <em>below</em> it (its maximum of 3<var>x</var><sub>1</sub>+5<var>x</var><sub>2</sub> is 36 &lt; 50). No point satisfies everything: the problem becomes <strong>infeasible</strong>.</p></div>
+
+<div class="box warn"><span class="label">Watch out</span>
+<ul>
+  <li>For a <strong>min</strong> problem, slide the iso-line in the direction that <em>decreases</em> the objective, and stop at the <em>first</em> feasible point it reaches.</li>
+  <li>Always shade the correct side of each constraint, and check with the origin.</li>
+  <li>Equality constraints (as in Assignment 3, Q10) restrict you to the <em>line itself</em>, not one side of it.</li>
+  <li>Report both the optimal <em>solution</em> (the point) and the optimal <em>objective value</em>.</li>
+</ul></div>
+
+<div class="box chk"><span class="label">Self-check</span>
+<ol>
+  <li>Wyndor with objective max 6<var>x</var><sub>1</sub> + 4<var>x</var><sub>2</sub>: which corner is optimal, and is it unique?
+    <div class="answer">Values: (0,0)=0, (4,0)=24, (4,3)=36, (2,6)=36, (0,6)=24. Tie between (4,3) and (2,6): the objective is 2&times;(3<var>x</var><sub>1</sub>+2<var>x</var><sub>2</sub>), parallel to Plant 3, so all points on that edge are optimal with <var>Z</var> = 36. Not unique.</div></li>
+  <li>Which constraints are binding at (4, 3)?
+    <div class="answer"><var>x</var><sub>1</sub> &le; 4 (4 = 4) and 3<var>x</var><sub>1</sub>+2<var>x</var><sub>2</sub> &le; 18 (12 + 6 = 18). Plant 2 has slack (6 &lt; 12).</div></li>
+  <li>How does the iso-line slope tell you whether there are multiple optima?
+    <div class="answer">If it equals the slope of a binding constraint edge at the optimal end of the region, the whole edge is optimal.</div></li>
+  <li>List the four possible outcomes of an LP.
+    <div class="answer">Unique optimum, multiple optima, unbounded, infeasible.</div></li>
+  <li>Sketch the region for <var>x</var><sub>1</sub> + <var>x</var><sub>2</sub> &le; 4, <var>x</var><sub>1</sub> &ge; 0, <var>x</var><sub>2</sub> &ge; 0 and solve max 2<var>x</var><sub>1</sub> + <var>x</var><sub>2</sub>.
+    <div class="answer">Triangle with corners (0,0), (4,0), (0,4). Values 0, 8, 4, so optimum (4, 0) with value 8.</div></li>
+</ol></div>
+
+<!-- ============================ CH 8 ============================ -->
+<h1 class="chapter newpage" id="c8">8. One-page cheat sheet</h1>
+<div class="two">
+<div>
+<h3>Analytics &amp; modeling</h3>
+<ul>
+  <li>Descriptive (what happened) &rarr; predictive (what will happen) &rarr; <strong>prescriptive</strong> (what to do).</li>
+  <li>Model = decisions + constraints + objective.</li>
+  <li>Variable types: continuous, integer, binary, free, &ge;0, &le;0.</li>
+  <li>max <var>f</var> = &minus;min(&minus;<var>f</var>).</li>
+</ul>
+<h3>Complexity</h3>
+<ul>
+  <li>Worst case, count primitive steps, drop constants.</li>
+  <li>Loops: multiply their own bounds. <var>n</var>&times;<var>m</var>&times;<var>p</var> &rarr; <var>O</var>(<var>nmp</var>).</li>
+  <li>Poly = efficient; 2<sup><var>n</var></sup> = brute force.</li>
+  <li>BFS, DFS: <var>O</var>(|<var>V</var>|+|<var>E</var>|).</li>
+  <li>P &sub; NP; NPC believed outside P; P = NP open.</li>
+</ul>
+<h3>Gradient descent</h3>
+<ul>
+  <li><var>x</var> &larr; <var>x</var> &minus; &eta;&nbsp;&nabla;<var>f</var>(<var>x</var>). Update all variables together, recompute <var>f</var> unrounded.</li>
+  <li>&eta; too big &rarr; oscillate; too small &rarr; slow.</li>
+  <li>Convex &rarr; global min. SGD = one sample/mini-batch per step.</li>
+  <li><var>f</var> = <var>x</var><sup>2</sup>+2<var>y</var><sup>2</sup>: &nabla;<var>f</var> = (2<var>x</var>, 4<var>y</var>).</li>
+</ul>
+</div>
+<div>
+<h3>LP standard form</h3>
+<ul>
+  <li><strong>min</strong>, all <strong>&ge;</strong>, all <strong><var>x</var> &ge; 0</strong>.</li>
+  <li>&le; &rarr; multiply by &minus;1. = &rarr; two inequalities. Free &rarr; <var>x</var><sup>+</sup>&minus;<var>x</var><sup>&minus;</sup>. &le;0 var &rarr; negate.</li>
+  <li>Matrix: min <strong>c</strong><sup>T</sup><strong>x</strong> s.t. <strong>Ax</strong> &ge; <strong>b</strong>, <strong>x</strong> &ge; 0. Constants go to the RHS first.</li>
+</ul>
+<h3>LP assumptions</h3>
+<p>Proportionality, additivity, divisibility, certainty.</p>
+<h3>Graphical method</h3>
+<ol>
+  <li>Draw constraints, test origin.</li>
+  <li>Shade the feasible region.</li>
+  <li>Draw iso-lines (same slope).</li>
+  <li>Slide to the last touch (max: up/right; min: down/left).</li>
+  <li>Solve the two binding lines for the optimum.</li>
+</ol>
+<h3>Outcomes</h3>
+<p>Unique &middot; multiple (iso-line parallel to an edge) &middot; unbounded &middot; infeasible. Optimal solutions are at corner points.</p>
+<h3>Key numbers</h3>
+<ul>
+  <li>Fencing: <var>x</var> = 600, <var>y</var> = 1200, area 720,000.</li>
+  <li>Wyndor: (2, 6), <var>Z</var> = 36.</li>
+  <li>Diet: 3 ice cream + 1 cola, 90&cent;.</li>
+</ul>
+</div>
+</div>
+
+<p class="note" style="margin-top:28px">Prepared from the ISA 634 lecture handouts. Not an official course document; verify against the instructor&rsquo;s slides and your own notes.</p>
+</div><!-- /sheet -->
+
+<script>
+  (function(){
+    var box=document.getElementById('ans');
+    function apply(){document.body.classList.toggle('hide-answers',!box.checked);}
+    box.addEventListener('change',apply);apply();
+  })();
+</script>
+</body>
+</html>
